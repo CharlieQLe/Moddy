@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Gnome Typescript Template
+Exec=gnome-typescript-template
+Icon=io.github.charlieqle.GnomeTypescriptTemplate
+Terminal=false
+Type=Application
+Categories=GTK;
+StartupNotify=true

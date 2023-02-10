@@ -1,0 +1,55 @@
+{
+    "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+    "parser": "@typescript-eslint/parser",
+    "plugins": ["@typescript-eslint"],
+    "root": true,
+    "rules": {
+        "array-callback-return": [
+            "warn",
+            {
+                "checkForEach": true
+            }
+        ],
+        "no-constant-binary-expression": "warn",
+        "no-constructor-return": "warn",
+        "no-new-native-nonconstructor": "warn",
+        "no-promise-executor-return": "warn",
+        "no-self-compare": "warn",
+        "no-template-curly-in-string": "warn",
+        "no-use-before-define": "off",
+        "require-atomic-updates": "warn",
+        "no-tabs": "warn",
+        "no-trailing-spaces": "warn",
+        "comma-dangle": [ "warn", "only-multiline" ],
+        "no-array-constructor": "warn",
+        "new-cap": "warn",
+        "dot-notation": "warn",
+        "default-case-last": "warn",
+        "default-param-last": "error",
+        "curly": "warn",
+        "class-methods-use-this": "warn",
+        "block-scoped-var": "warn",
+        "comma-style": "warn",
+        "comma-spacing": "warn",
+        "arrow-parens": [ "warn", "as-needed" ],
+        "no-unused-vars": "off",
+        "brace-style": "warn",
+        "dot-location": [ "warn", "property" ],
+        "indent": [ "warn", 4 ],
+        "key-spacing": "warn",
+        "array-bracket-spacing": "warn",
+        "space-before-function-paren": ["warn", "never"],
+        "space-before-blocks": "warn",
+        "object-curly-spacing": [ "warn", "always" ],
+        "func-call-spacing": "warn",
+        "keyword-spacing": "warn",
+        "@typescript-eslint/no-unused-vars": [
+            "warn", // or "error"
+            { 
+                "argsIgnorePattern": "^_",
+                "varsIgnorePattern": "^_",
+                "caughtErrorsIgnorePattern": "^_"
+            }
+        ]
+    }
+}

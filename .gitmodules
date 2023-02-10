@@ -1,0 +1,3 @@
+[submodule "gi-types"]
+	path = gi-types
+	url = git@github.com:CharlieQLe/gi-types.git

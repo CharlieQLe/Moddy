@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "experimentalDecorators": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "allowJs": true,
+        "paths": {
+            "*": [ "gi-types/*" ],
+            "resource:///io/github/charlieqle/GnomeTypescriptTemplate/js/*": [ "src/*" ]
+	    },
+	    "target": "ES2021",
+        "baseUrl": ".",
+        "moduleResolution": "node",
+        "module": "ES2020",
+        "outDir": "tsc-out",
+        "lib": [ "ES2021" ]
+    },
+    "include": [
+        "gi-types/*",
+        "src/**/*",
+        "src/*"
+    ]
+}

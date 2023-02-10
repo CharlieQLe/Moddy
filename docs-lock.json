@@ -1,0 +1,571 @@
+[
+    {
+        "name": "Adw",
+        "api_version": "1",
+        "c_prefix": [
+            "adw"
+        ],
+        "path": "/usr/share/gir-1.0/Adw-1.gir",
+        "id": "Adw-1.gir",
+        "slug": "adw1"
+    },
+    {
+        "name": "Atk",
+        "api_version": "1.0",
+        "c_prefix": [
+            "atk"
+        ],
+        "path": "/usr/share/gir-1.0/Atk-1.0.gir",
+        "id": "Atk-1.0.gir",
+        "slug": "atk10"
+    },
+    {
+        "name": "Atspi",
+        "api_version": "2.0",
+        "c_prefix": [
+            "atspi"
+        ],
+        "path": "/usr/share/gir-1.0/Atspi-2.0.gir",
+        "id": "Atspi-2.0.gir",
+        "slug": "atspi20"
+    },
+    {
+        "name": "cairo",
+        "api_version": "1.0",
+        "c_prefix": [
+            "cairo"
+        ],
+        "path": "/usr/share/gir-1.0/cairo-1.0.gir",
+        "id": "cairo-1.0.gir",
+        "slug": "cairo10"
+    },
+    {
+        "name": "CloudProviders",
+        "api_version": "0.3",
+        "c_prefix": [
+            "cloud_providers"
+        ],
+        "path": "/usr/share/gir-1.0/CloudProviders-0.3.gir",
+        "id": "CloudProviders-0.3.gir",
+        "slug": "cloudproviders03"
+    },
+    {
+        "name": "DBus",
+        "api_version": "1.0",
+        "c_prefix": [],
+        "path": "/usr/share/gir-1.0/DBus-1.0.gir",
+        "id": "DBus-1.0.gir",
+        "slug": "dbus10"
+    },
+    {
+        "name": "DBusGLib",
+        "api_version": "1.0",
+        "c_prefix": [],
+        "path": "/usr/share/gir-1.0/DBusGLib-1.0.gir",
+        "id": "DBusGLib-1.0.gir",
+        "slug": "dbusglib10"
+    },
+    {
+        "name": "fontconfig",
+        "api_version": "2.0",
+        "c_prefix": [
+            "fc"
+        ],
+        "path": "/usr/share/gir-1.0/fontconfig-2.0.gir",
+        "id": "fontconfig-2.0.gir",
+        "slug": "fontconfig20"
+    },
+    {
+        "name": "freetype2",
+        "api_version": "2.0",
+        "c_prefix": [
+            "FT"
+        ],
+        "path": "/usr/share/gir-1.0/freetype2-2.0.gir",
+        "id": "freetype2-2.0.gir",
+        "slug": "freetype220"
+    },
+    {
+        "name": "GDesktopEnums",
+        "api_version": "3.0",
+        "c_prefix": [
+            "g_desktop"
+        ],
+        "path": "/usr/share/gir-1.0/GDesktopEnums-3.0.gir",
+        "id": "GDesktopEnums-3.0.gir",
+        "slug": "gdesktopenums30"
+    },
+    {
+        "name": "Gdk",
+        "api_version": "3.0",
+        "c_prefix": [
+            "gdk"
+        ],
+        "path": "/usr/share/gir-1.0/Gdk-3.0.gir",
+        "id": "Gdk-3.0.gir",
+        "slug": "gdk30"
+    },
+    {
+        "name": "Gdk",
+        "api_version": "4.0",
+        "c_prefix": [
+            "gdk"
+        ],
+        "path": "/usr/share/gir-1.0/Gdk-4.0.gir",
+        "id": "Gdk-4.0.gir",
+        "slug": "gdk40"
+    },
+    {
+        "name": "GdkPixbuf",
+        "api_version": "2.0",
+        "c_prefix": [
+            "gdk"
+        ],
+        "path": "/usr/share/gir-1.0/GdkPixbuf-2.0.gir",
+        "id": "GdkPixbuf-2.0.gir",
+        "slug": "gdkpixbuf20"
+    },
+    {
+        "name": "GdkPixdata",
+        "api_version": "2.0",
+        "c_prefix": [
+            "gdk"
+        ],
+        "path": "/usr/share/gir-1.0/GdkPixdata-2.0.gir",
+        "id": "GdkPixdata-2.0.gir",
+        "slug": "gdkpixdata20"
+    },
+    {
+        "name": "GdkWayland",
+        "api_version": "4.0",
+        "c_prefix": [
+            "gdk"
+        ],
+        "path": "/usr/share/gir-1.0/GdkWayland-4.0.gir",
+        "id": "GdkWayland-4.0.gir",
+        "slug": "gdkwayland40"
+    },
+    {
+        "name": "GdkX11",
+        "api_version": "3.0",
+        "c_prefix": [
+            "gdk"
+        ],
+        "path": "/usr/share/gir-1.0/GdkX11-3.0.gir",
+        "id": "GdkX11-3.0.gir",
+        "slug": "gdkx1130"
+    },
+    {
+        "name": "GdkX11",
+        "api_version": "4.0",
+        "c_prefix": [
+            "gdk"
+        ],
+        "path": "/usr/share/gir-1.0/GdkX11-4.0.gir",
+        "id": "GdkX11-4.0.gir",
+        "slug": "gdkx1140"
+    },
+    {
+        "name": "Gio",
+        "api_version": "2.0",
+        "c_prefix": [
+            "g"
+        ],
+        "path": "/usr/share/gir-1.0/Gio-2.0.gir",
+        "id": "Gio-2.0.gir",
+        "slug": "gio20"
+    },
+    {
+        "name": "GIRepository",
+        "api_version": "2.0",
+        "c_prefix": [
+            "g",
+            "gi"
+        ],
+        "path": "/usr/share/gir-1.0/GIRepository-2.0.gir",
+        "id": "GIRepository-2.0.gir",
+        "slug": "girepository20"
+    },
+    {
+        "name": "GL",
+        "api_version": "1.0",
+        "c_prefix": [
+            "gl"
+        ],
+        "path": "/usr/share/gir-1.0/GL-1.0.gir",
+        "id": "GL-1.0.gir",
+        "slug": "gl10"
+    },
+    {
+        "name": "GLib",
+        "api_version": "2.0",
+        "c_prefix": [
+            "g",
+            "glib"
+        ],
+        "path": "/usr/share/gir-1.0/GLib-2.0.gir",
+        "id": "GLib-2.0.gir",
+        "slug": "glib20"
+    },
+    {
+        "name": "GModule",
+        "api_version": "2.0",
+        "c_prefix": [
+            "g"
+        ],
+        "path": "/usr/share/gir-1.0/GModule-2.0.gir",
+        "id": "GModule-2.0.gir",
+        "slug": "gmodule20"
+    },
+    {
+        "name": "GnomeAutoar",
+        "api_version": "0.1",
+        "c_prefix": [
+            "autoar"
+        ],
+        "path": "/usr/share/gir-1.0/GnomeAutoar-0.1.gir",
+        "id": "GnomeAutoar-0.1.gir",
+        "slug": "gnomeautoar01"
+    },
+    {
+        "name": "GnomeAutoarGtk",
+        "api_version": "0.1",
+        "c_prefix": [
+            "autoar_gtk"
+        ],
+        "path": "/usr/share/gir-1.0/GnomeAutoarGtk-0.1.gir",
+        "id": "GnomeAutoarGtk-0.1.gir",
+        "slug": "gnomeautoargtk01"
+    },
+    {
+        "name": "GObject",
+        "api_version": "2.0",
+        "c_prefix": [
+            "g"
+        ],
+        "path": "/usr/share/gir-1.0/GObject-2.0.gir",
+        "id": "GObject-2.0.gir",
+        "slug": "gobject20"
+    },
+    {
+        "name": "Graphene",
+        "api_version": "1.0",
+        "c_prefix": [
+            "graphene"
+        ],
+        "path": "/usr/share/gir-1.0/Graphene-1.0.gir",
+        "id": "Graphene-1.0.gir",
+        "slug": "graphene10"
+    },
+    {
+        "name": "Gsk",
+        "api_version": "4.0",
+        "c_prefix": [
+            "gsk"
+        ],
+        "path": "/usr/share/gir-1.0/Gsk-4.0.gir",
+        "id": "Gsk-4.0.gir",
+        "slug": "gsk40"
+    },
+    {
+        "name": "Gst",
+        "api_version": "1.0",
+        "c_prefix": [
+            "gst"
+        ],
+        "path": "/usr/share/gir-1.0/Gst-1.0.gir",
+        "id": "Gst-1.0.gir",
+        "slug": "gst10"
+    },
+    {
+        "name": "GstBase",
+        "api_version": "1.0",
+        "c_prefix": [
+            "gst"
+        ],
+        "path": "/usr/share/gir-1.0/GstBase-1.0.gir",
+        "id": "GstBase-1.0.gir",
+        "slug": "gstbase10"
+    },
+    {
+        "name": "GstCheck",
+        "api_version": "1.0",
+        "c_prefix": [
+            "gst"
+        ],
+        "path": "/usr/share/gir-1.0/GstCheck-1.0.gir",
+        "id": "GstCheck-1.0.gir",
+        "slug": "gstcheck10"
+    },
+    {
+        "name": "GstController",
+        "api_version": "1.0",
+        "c_prefix": [
+            "gst"
+        ],
+        "path": "/usr/share/gir-1.0/GstController-1.0.gir",
+        "id": "GstController-1.0.gir",
+        "slug": "gstcontroller10"
+    },
+    {
+        "name": "GstNet",
+        "api_version": "1.0",
+        "c_prefix": [
+            "gst"
+        ],
+        "path": "/usr/share/gir-1.0/GstNet-1.0.gir",
+        "id": "GstNet-1.0.gir",
+        "slug": "gstnet10"
+    },
+    {
+        "name": "Gtk",
+        "api_version": "3.0",
+        "c_prefix": [
+            "gtk"
+        ],
+        "path": "/usr/share/gir-1.0/Gtk-3.0.gir",
+        "id": "Gtk-3.0.gir",
+        "slug": "gtk30"
+    },
+    {
+        "name": "Gtk",
+        "api_version": "4.0",
+        "c_prefix": [
+            "gtk"
+        ],
+        "path": "/usr/share/gir-1.0/Gtk-4.0.gir",
+        "id": "Gtk-4.0.gir",
+        "slug": "gtk40"
+    },
+    {
+        "name": "GtkSource",
+        "api_version": "5",
+        "c_prefix": [
+            "gtk_source"
+        ],
+        "path": "/usr/share/gir-1.0/GtkSource-5.gir",
+        "id": "GtkSource-5.gir",
+        "slug": "gtksource5"
+    },
+    {
+        "name": "HarfBuzz",
+        "api_version": "0.0",
+        "c_prefix": [
+            "hb",
+            "hb_gobject"
+        ],
+        "path": "/usr/share/gir-1.0/HarfBuzz-0.0.gir",
+        "id": "HarfBuzz-0.0.gir",
+        "slug": "harfbuzz00"
+    },
+    {
+        "name": "ICal",
+        "api_version": "3.0",
+        "c_prefix": [
+            "ical"
+        ],
+        "path": "/usr/share/gir-1.0/ICal-3.0.gir",
+        "id": "ICal-3.0.gir",
+        "slug": "ical30"
+    },
+    {
+        "name": "ICalGLib",
+        "api_version": "3.0",
+        "c_prefix": [
+            "i_cal"
+        ],
+        "path": "/usr/share/gir-1.0/ICalGLib-3.0.gir",
+        "id": "ICalGLib-3.0.gir",
+        "slug": "icalglib30"
+    },
+    {
+        "name": "JavaScriptCore",
+        "api_version": "5.0",
+        "c_prefix": [
+            "jsc"
+        ],
+        "path": "/usr/share/gir-1.0/JavaScriptCore-5.0.gir",
+        "id": "JavaScriptCore-5.0.gir",
+        "slug": "javascriptcore50"
+    },
+    {
+        "name": "Json",
+        "api_version": "1.0",
+        "c_prefix": [
+            "json"
+        ],
+        "path": "/usr/share/gir-1.0/Json-1.0.gir",
+        "id": "Json-1.0.gir",
+        "slug": "json10"
+    },
+    {
+        "name": "libxml2",
+        "api_version": "2.0",
+        "c_prefix": [
+            "xml"
+        ],
+        "path": "/usr/share/gir-1.0/libxml2-2.0.gir",
+        "id": "libxml2-2.0.gir",
+        "slug": "libxml220"
+    },
+    {
+        "name": "Manette",
+        "api_version": "0.2",
+        "c_prefix": [
+            "manette"
+        ],
+        "path": "/usr/share/gir-1.0/Manette-0.2.gir",
+        "id": "Manette-0.2.gir",
+        "slug": "manette02"
+    },
+    {
+        "name": "Pango",
+        "api_version": "1.0",
+        "c_prefix": [
+            "pango"
+        ],
+        "path": "/usr/share/gir-1.0/Pango-1.0.gir",
+        "id": "Pango-1.0.gir",
+        "slug": "pango10"
+    },
+    {
+        "name": "PangoCairo",
+        "api_version": "1.0",
+        "c_prefix": [
+            "pango_cairo"
+        ],
+        "path": "/usr/share/gir-1.0/PangoCairo-1.0.gir",
+        "id": "PangoCairo-1.0.gir",
+        "slug": "pangocairo10"
+    },
+    {
+        "name": "PangoFc",
+        "api_version": "1.0",
+        "c_prefix": [
+            "pango_fc"
+        ],
+        "path": "/usr/share/gir-1.0/PangoFc-1.0.gir",
+        "id": "PangoFc-1.0.gir",
+        "slug": "pangofc10"
+    },
+    {
+        "name": "PangoFT2",
+        "api_version": "1.0",
+        "c_prefix": [
+            "pango_ft2"
+        ],
+        "path": "/usr/share/gir-1.0/PangoFT2-1.0.gir",
+        "id": "PangoFT2-1.0.gir",
+        "slug": "pangoft210"
+    },
+    {
+        "name": "PangoOT",
+        "api_version": "1.0",
+        "c_prefix": [
+            "pango_ot"
+        ],
+        "path": "/usr/share/gir-1.0/PangoOT-1.0.gir",
+        "id": "PangoOT-1.0.gir",
+        "slug": "pangoot10"
+    },
+    {
+        "name": "PangoXft",
+        "api_version": "1.0",
+        "c_prefix": [
+            "pango_xft"
+        ],
+        "path": "/usr/share/gir-1.0/PangoXft-1.0.gir",
+        "id": "PangoXft-1.0.gir",
+        "slug": "pangoxft10"
+    },
+    {
+        "name": "Soup",
+        "api_version": "3.0",
+        "c_prefix": [
+            "soup"
+        ],
+        "path": "/usr/share/gir-1.0/Soup-3.0.gir",
+        "id": "Soup-3.0.gir",
+        "slug": "soup30"
+    },
+    {
+        "name": "Vulkan",
+        "api_version": "1.0",
+        "c_prefix": [
+            "vk"
+        ],
+        "path": "/usr/share/gir-1.0/Vulkan-1.0.gir",
+        "id": "Vulkan-1.0.gir",
+        "slug": "vulkan10"
+    },
+    {
+        "name": "WebKit2",
+        "api_version": "5.0",
+        "c_prefix": [
+            "webkit"
+        ],
+        "path": "/usr/share/gir-1.0/WebKit2-5.0.gir",
+        "id": "WebKit2-5.0.gir",
+        "slug": "webkit250"
+    },
+    {
+        "name": "WebKit2WebExtension",
+        "api_version": "5.0",
+        "c_prefix": [
+            "webkit"
+        ],
+        "path": "/usr/share/gir-1.0/WebKit2WebExtension-5.0.gir",
+        "id": "WebKit2WebExtension-5.0.gir",
+        "slug": "webkit2webextension50"
+    },
+    {
+        "name": "win32",
+        "api_version": "1.0",
+        "c_prefix": [
+            "Win32"
+        ],
+        "path": "/usr/share/gir-1.0/win32-1.0.gir",
+        "id": "win32-1.0.gir",
+        "slug": "win3210"
+    },
+    {
+        "name": "xfixes",
+        "api_version": "4.0",
+        "c_prefix": [
+            "X"
+        ],
+        "path": "/usr/share/gir-1.0/xfixes-4.0.gir",
+        "id": "xfixes-4.0.gir",
+        "slug": "xfixes40"
+    },
+    {
+        "name": "xft",
+        "api_version": "2.0",
+        "c_prefix": [
+            "Xft"
+        ],
+        "path": "/usr/share/gir-1.0/xft-2.0.gir",
+        "id": "xft-2.0.gir",
+        "slug": "xft20"
+    },
+    {
+        "name": "xlib",
+        "api_version": "2.0",
+        "c_prefix": [
+            "X"
+        ],
+        "path": "/usr/share/gir-1.0/xlib-2.0.gir",
+        "id": "xlib-2.0.gir",
+        "slug": "xlib20"
+    },
+    {
+        "name": "xrandr",
+        "api_version": "1.3",
+        "c_prefix": [
+            "XRR"
+        ],
+        "path": "/usr/share/gir-1.0/xrandr-1.3.gir",
+        "id": "xrandr-1.3.gir",
+        "slug": "xrandr13"
+    }
+]
