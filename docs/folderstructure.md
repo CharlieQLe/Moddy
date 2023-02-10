@@ -1,5 +1,16 @@
 # FOLDER STRUCTURE
 
+## CONFIGS
+
+Moddy utilizes the folder located via `$XDG_CONFIG_DIR` or `$HOME/.config` to store configs related to Moddy and configured games. The folder structure is as follows:
+
+```
+moddy/
+└ gametitle.json
+```
+
+## DATA
+
 Moddy utilizes the folder located via `$XDG_DATA_DIR` or `$HOME/.local/share` to store data related to configured games. The folder structure is as follows:
 
 ```

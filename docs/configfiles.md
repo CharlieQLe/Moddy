@@ -6,6 +6,7 @@ Games, profiles, and mods all have metadata JSON files associated with them.
 
 ```
 {
+    "dataDir": "/path/to/data/dir",
     "installDir": "/path/to/game/",
     "relativeModPath": "relative/path/to/install/mods/",
     "selectedProfile": "profilename",
@@ -18,6 +19,8 @@ Games, profiles, and mods all have metadata JSON files associated with them.
     }
 }
 ```
+
+```dataDir```: where the downloads, mods, etc. are stored.
 
 ```installDir```: where the game is installed. 
 

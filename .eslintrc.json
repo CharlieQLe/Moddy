@@ -10,6 +10,7 @@
                 "checkForEach": true
             }
         ],
+        "no-constant-condition": "off",
         "no-constant-binary-expression": "warn",
         "no-constructor-return": "warn",
         "no-new-native-nonconstructor": "warn",
