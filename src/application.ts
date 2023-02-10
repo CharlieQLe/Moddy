@@ -3,7 +3,7 @@ import Gio from 'gi://Gio';
 import Gtk from 'gi://Gtk?version=4.0';
 import Adw from 'gi://Adw?version=1';
 
-import { Window } from "resource:///io/github/charlieqle/GnomeTypescriptTemplate/js/widgets/window.js";
+import { Window } from "resource:///io/github/charlieqle/Moddy/js/widgets/window.js";
 
 pkg.initGettext();
 pkg.initFormat();
@@ -29,7 +29,7 @@ export class Application extends Adw.Application {
         show_about_action.connect('activate', _ => {
             const aboutWindow = new Adw.AboutWindow({
                 transient_for: this._mainWindow,
-                application_name: 'GNOME Typescript Template',
+                application_name: 'Moddy',
                 application_icon: pkg.name,
                 developer_name: 'Charlie Le',
                 version: pkg.version,

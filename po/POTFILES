@@ -1,6 +1,6 @@
-data/io.github.charlieqle.GnomeTypescriptTemplate.desktop.in
-data/io.github.charlieqle.GnomeTypescriptTemplate.appdata.xml.in
-data/io.github.charlieqle.GnomeTypescriptTemplate.gschema.xml
+data/io.github.charlieqle.Moddy.desktop.in
+data/io.github.charlieqle.Moddy.appdata.xml.in
+data/io.github.charlieqle.Moddy.gschema.xml
 data/resources/ui/window.ui
 src/main.js
 src/widgets/window.js

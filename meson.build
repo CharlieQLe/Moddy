@@ -1,4 +1,4 @@
-project('gnome-typescript-template',
+project('moddy',
           version: '0.1.0',
     meson_version: '>= 0.61.0',
   default_options: [ 'warning_level=2', 'werror=false', ],
@@ -7,7 +7,7 @@ project('gnome-typescript-template',
 i18n = import('i18n')
 gnome = import('gnome')
 
-application_id = 'io.github.charlieqle.GnomeTypescriptTemplate'
+application_id = 'io.github.charlieqle.Moddy'
 pkgdatadir = join_paths(get_option('datadir'), meson.project_name())
 resource_path = '/' + application_id.replace('.', '/')
 

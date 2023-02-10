@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/io/github/charlieqle/GnomeTypescriptTemplate">
+  <gresource prefix="/io/github/charlieqle/Moddy">
     <file preprocess="xml-stripblanks">gtk/help-overlay.ui</file>
     <file preprocess="xml-stripblanks">ui/window.ui</file>
     <file>style.css</file>

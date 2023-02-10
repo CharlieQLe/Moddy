@@ -1,12 +1,12 @@
 {
-    "id" : "io.github.charlieqle.GnomeTypescriptTemplate",
+    "id" : "io.github.charlieqle.Moddy",
     "runtime" : "org.gnome.Platform",
     "runtime-version" : "43",
     "sdk" : "org.gnome.Sdk",
     "sdk-extensions": [
         "org.freedesktop.Sdk.Extension.node18"
     ],
-    "command" : "gnome-typescript-template",
+    "command" : "moddy",
     "finish-args" : [
         "--share=network",
         "--share=ipc",
@@ -27,7 +27,7 @@
     ],
     "modules" : [
         {
-            "name" : "gnome-typescript-template",
+            "name" : "moddy",
             "builddir" : true,
             "buildsystem" : "meson",
             "config-opts": [

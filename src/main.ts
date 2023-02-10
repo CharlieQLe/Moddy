@@ -1,4 +1,4 @@
-import { Application } from "resource:///io/github/charlieqle/GnomeTypescriptTemplate/js/application.js";
+import { Application } from "resource:///io/github/charlieqle/Moddy/js/application.js";
 
 pkg.initGettext();
 pkg.initFormat();

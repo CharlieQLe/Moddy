@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Moddy
+Exec=moddy
+Icon=io.github.charlieqle.Moddy
+Terminal=false
+Type=Application
+Categories=GTK;
+StartupNotify=true

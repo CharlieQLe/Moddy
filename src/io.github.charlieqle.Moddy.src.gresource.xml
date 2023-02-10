@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/io/github/charlieqle/GnomeTypescriptTemplate/js">
+  <gresource prefix="/io/github/charlieqle/Moddy/js">
     <file>widgets/window.js</file>
     <file>application.js</file>
     <file>main.js</file>

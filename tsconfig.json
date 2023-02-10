@@ -6,7 +6,7 @@
         "allowJs": true,
         "paths": {
             "*": [ "gi-types/*" ],
-            "resource:///io/github/charlieqle/GnomeTypescriptTemplate/js/*": [ "src/*" ]
+            "resource:///io/github/charlieqle/Moddy/js/*": [ "src/*" ]
 	    },
 	    "target": "ES2021",
         "baseUrl": ".",

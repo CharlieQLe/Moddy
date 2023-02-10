@@ -5,7 +5,7 @@ export class Window extends Adw.ApplicationWindow {
     static {
         GObject.registerClass({
             GTypeName: 'Window',
-            Template: 'resource:///io/github/charlieqle/GnomeTypescriptTemplate/ui/window.ui',
+            Template: 'resource:///io/github/charlieqle/Moddy/ui/window.ui',
         }, this);
     }
 

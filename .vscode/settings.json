@@ -9,5 +9,5 @@
     },
     "mesonbuild.configureOnOpen": false,
     "mesonbuild.buildFolder": "_build",
-    "mesonbuild.mesonPath": "/var/home/charlie/Data/Projects/gnome-typescript-template/.flatpak/meson.sh"
+    "mesonbuild.mesonPath": "/var/home/charlie/Projects/Moddy/.flatpak/meson.sh"
 }
