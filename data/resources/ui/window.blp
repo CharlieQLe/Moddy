@@ -4,38 +4,19 @@ using Adw 1;
 template Window : Adw.ApplicationWindow {
     default-width: 600;
     default-height: 500;
-    content: Gtk.Box {
-        orientation: vertical;
+    content: Adw.ToastOverlay toastOverlay {
+        child: Adw.Leaflet leaflet {
+            can-unfold: false;
 
-        Adw.HeaderBar {
-            title-widget: Adw.WindowTitle {
-                title: "Moddy";
-            };
-
-            [end]
-            Gtk.MenuButton {
-                icon-name: "open-menu-symbolic";
-                menu-model: primary_menu;
+            Adw.LeafletPage {
+                name: "home";
+                child: .HomeView homeView { };
             }
-        }
+
+            Adw.LeafletPage {
+                name: "add-game";
+                child: .AddGameView addGameView { };
+            }
+        };
     };
-}
-
-menu primary_menu {
-    section {
-        item {
-            label: _("_Preferences");
-            action: "app.preferences";
-        }
-
-        item {
-            label: _("_Keyboard Shortcuts");
-            action: "win.show-help-overlay";
-        }
-
-        item {
-            label: _("_About Moddy");
-            action: "app.about";
-        }
-    }
 }

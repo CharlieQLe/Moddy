@@ -1,0 +1,73 @@
+using Gtk 4.0;
+using Adw 1;
+
+template HomeView : Gtk.Box {
+    orientation: vertical;
+
+    Adw.HeaderBar {
+        title-widget: Adw.WindowTitle {
+            title: "Moddy";
+        };
+
+        [start]
+        Gtk.Button {
+            icon-name: "list-add-symbolic";
+            action-name: "window.change-view";
+            action-target: "'add-game'";
+        }
+
+        [end]
+        Gtk.MenuButton {
+            icon-name: "open-menu-symbolic";
+            menu-model: primary_menu;
+        }
+    }
+
+    Adw.StatusPage {
+        hexpand: true;
+        vexpand: true;
+        visible: bind HomeView.hasGames inverted;
+        icon-name: "applications-games-symbolic";
+        title: "No games found!";
+        description: "Add a game and start modding!";
+    }
+
+    Gtk.ScrolledWindow {
+        hexpand: true;
+        vexpand: true;
+        visible: bind HomeView.hasGames;
+        child: Adw.Clamp {
+            child: Gtk.Box {
+                orientation: vertical;
+                spacing: 24;
+                margin-top: 24;
+                margin-bottom: 24;
+                margin-start: 12;
+                margin-end: 12;
+
+                Adw.PreferencesGroup gamesGroup {
+
+                }
+            };
+        };
+    }
+}
+
+menu primary_menu {
+    section {
+        item {
+            label: _("_Preferences");
+            action: "app.preferences";
+        }
+
+        item {
+            label: _("_Keyboard Shortcuts");
+            action: "win.show-help-overlay";
+        }
+
+        item {
+            label: _("_About Moddy");
+            action: "app.about";
+        }
+    }
+}

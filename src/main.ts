@@ -1,13 +1,22 @@
 import Gio from 'gi://Gio';
+import GObject from 'gi://GObject';
 
+import { AddGameView } from 'resource:///io/github/charlieqle/Moddy/js/widgets/views/addGameView.js';
+import { HomeView } from 'resource:///io/github/charlieqle/Moddy/js/widgets/views/homeView.js';
 import { Application } from 'resource:///io/github/charlieqle/Moddy/js/application.js';
-
 import * as Utility from 'resource:///io/github/charlieqle/Moddy/js/utility.js';
 
 pkg.initGettext();
 pkg.initFormat();
 
 export function main(argv: string[]) {
+    [
+        AddGameView.$gtype,
+        HomeView.$gtype,
+    ].forEach(gtype => {
+        GObject.type_ensure(gtype);
+    })
+
     const configFile = Gio.File.new_for_path(Utility.getConfigDir());
     if (!configFile.query_exists(null)) {
         configFile.make_directory_with_parents(null);

@@ -1,0 +1,43 @@
+using Gtk 4.0;
+using Adw 1;
+
+template AddGameView : Gtk.Box {
+    orientation: vertical;
+
+    Adw.HeaderBar {
+        title-widget: Adw.WindowTitle {
+            title: "Add game";
+        };
+        decoration-layout: "";
+
+        [start]
+        Gtk.Button {
+            icon-name: "go-previous-symbolic";
+            action-name: "window.change-view";
+            action-target: "'home'";
+        }
+
+        [end]
+        Gtk.Button {
+            icon-name: "go-next-symbolic";
+            action-name: "window.add-game";
+        }
+    }
+
+    Gtk.ScrolledWindow {
+        hexpand: true;
+        vexpand: true;
+        child: Adw.Clamp {
+            child: Gtk.Box {
+                orientation: vertical;
+                spacing: 24;
+                margin-top: 24;
+                margin-bottom: 24;
+                margin-start: 12;
+                margin-end: 12;
+
+                // TODO: Add entries here
+            };
+        };
+    }
+}

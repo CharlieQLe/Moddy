@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/io/github/charlieqle/Moddy/js">
+    <file>widgets/views/addGameView.js</file>
+    <file>widgets/views/homeView.js</file>
     <file>widgets/window.js</file>
     <file>application.js</file>
     <file>config.js</file>
