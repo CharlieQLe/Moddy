@@ -87,7 +87,7 @@ export class GameView extends Gtk.Box {
         dialog.connect('response', (_: Adw.MessageDialog, response: string) => {
             if (response === 'uninstall' && this._game.uninstallMod(row.mod)) {
                 this._modsGroup.remove(row);
-                this._hasMods = this._game.mods.length > 0;
+                this.hasMods = this._game.mods.length > 0;
             }
         });
         dialog.show();
