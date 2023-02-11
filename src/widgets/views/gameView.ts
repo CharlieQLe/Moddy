@@ -14,6 +14,7 @@ export class GameView extends Gtk.Box {
     private _title!: string;
     private _hasMods!: boolean;
 
+    private _window: Gtk.Window;
     private _game: Game;
     private _rows: GameRow[];
 
@@ -29,9 +30,10 @@ export class GameView extends Gtk.Box {
         }, this);
     }
 
-    constructor(game: Game) {
+    constructor(game: Game, window: Gtk.Window) {
         super();
         this._game = game;
+        this._window = window;
         this._rows = [];
         this.title = game.name;
 
@@ -69,6 +71,28 @@ export class GameView extends Gtk.Box {
         this.notify('hasMods');
     }
 
+    public modMoveUp(row: ModRow) {
+        // TODO
+    }
+
+    public modMoveDown(row: ModRow) {
+        // TODO
+    }
+
+    public modUninstall(row: ModRow) {
+        const dialog = Adw.MessageDialog.new(this._window, `Uninstall ${row.mod.name}?`, 'This action cannot be undone!');
+        dialog.add_response('cancel', 'Cancel');
+        dialog.add_response('uninstall', 'Uninstall');
+        dialog.set_response_appearance('uninstall', Adw.ResponseAppearance.DESTRUCTIVE);
+        dialog.connect('response', (_: Adw.MessageDialog, response: string) => {
+            if (response === 'uninstall' && this._game.uninstallMod(row.mod)) {
+                this._modsGroup.remove(row);
+                this._hasMods = this._game.mods.length > 0;
+            }
+        });
+        dialog.show();
+    }
+
     private refreshMods() {
         // Clear rows
         this._rows.forEach(row => {
@@ -84,7 +108,7 @@ export class GameView extends Gtk.Box {
         const enabledMods = this._game.getEnabledModsForProfile(profileName);
         this.hasMods = this._game.mods.length > 0;
         this._game.mods.forEach(mod => {
-            const row = new ModRow(mod);
+            const row = new ModRow(mod, this);
             row.setModState(profile.json.enabledMods.includes(mod.name));
             row.connect('state-updated', (_: ModRow, __: boolean) => {
                 if (mod.enabled && !enabledMods.includes(mod)) {

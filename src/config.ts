@@ -234,6 +234,21 @@ export class Game {
         return true;
     }
 
+    public uninstallMod(mod: Mod) {
+        if (!this._mods.includes(mod)) {
+            return false;
+        }
+        this._mods.splice(this._mods.indexOf(mod), 1);
+        const output = Gio.File.new_for_path(GLib.build_filenamev([this.dataPath, 'mods', mod.name]));
+        output.trash(null);
+        for (const profile of Object.values(this.profiles)) {
+            profile.json.modOrder = profile.json.modOrder.filter(name => name !== mod.name);
+            profile.json.enabledMods = profile.json.enabledMods.filter(name => name !== mod.name);
+        }
+        this.save();
+        return true;
+    }
+
     public getEnabledModsForProfile(profilename: string) {
         if (!(profilename in this.profiles)) {
             return [];
