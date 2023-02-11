@@ -182,13 +182,9 @@ export class Game {
         const upperdir = GLib.build_filenamev([this.dataPath, 'overwrite']);
         const workdir = GLib.build_filenamev([this.dataPath, 'work']);
         const selectedProfile = this.profiles[this.json.selectedProfile || 'Default'];
-        const lower: string[] = [path];
-        selectedProfile.json.modOrder.filter(modname => selectedProfile.json.enabledMods.includes(modname))
+        const lower: string[] = [path, ...selectedProfile.json.modOrder.filter(modname => selectedProfile.json.enabledMods.includes(modname))
             .map(modname => GLib.build_filenamev([this.dataPath, 'mods', modname]))
-            .reverse()
-            .forEach(path => {
-                lower.push(path);
-            });
+            .reverse()];
         const [ok, _, stderr, exit] = Utility.spawn('pkexec', 'mount', '-t', 'overlay', 'overlay', `"-olowerdir=${lower.join(':')},upperdir=${upperdir},workdir=${workdir}"`, `"${path}"`);
         const decoder = new TextDecoder();
         if (stderr) {
