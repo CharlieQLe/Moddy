@@ -2,6 +2,7 @@
 <gresources>
   <gresource prefix="/io/github/charlieqle/Moddy/js">
     <file>widgets/views/addGameView.js</file>
+    <file>widgets/views/gameView.js</file>
     <file>widgets/views/homeView.js</file>
     <file>widgets/directoryEntryRow.js</file>
     <file>widgets/gameRow.js</file>

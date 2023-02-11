@@ -25,7 +25,7 @@ export class HomeView extends Gtk.Box {
     }
 
     public get hasGames() {
-        return this._hasGames;
+        return this._hasGames || false;
     }
 
     public set hasGames(hasGames: boolean) {

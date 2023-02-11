@@ -4,6 +4,7 @@ import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 
 import { AddGameView } from 'resource:///io/github/charlieqle/Moddy/js/widgets/views/addGameView.js';
+import { GameView } from 'resource:///io/github/charlieqle/Moddy/js/widgets/views/gameView.js';
 import { HomeView } from 'resource:///io/github/charlieqle/Moddy/js/widgets/views/homeView.js';
 import { Game } from 'resource:///io/github/charlieqle/Moddy/js/config.js';
 
@@ -63,9 +64,10 @@ export class Window extends Adw.ApplicationWindow {
     }
 
     public addGame(game: Game) {
-        // TODO: add game widgets
         this._games.push(game);
         this._homeView.addGame(game);
+        this._leaflet.append(new GameView(game))
+            .set_name(`game-${game.name}`);
     }
 
     private changeViewActivate(_: Gio.SimpleAction, pagename: GLib.Variant<string>) {
@@ -82,6 +84,7 @@ export class Window extends Adw.ApplicationWindow {
         const game = this._addGameView.createGame();
         this.addGame(game);
         game.save();
+        this._leaflet.set_visible_child_name(`game-${game.name}`);
         this._addGameView.clear();
         log(`Added ${game.name}!`);
     }

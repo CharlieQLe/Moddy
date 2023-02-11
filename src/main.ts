@@ -2,6 +2,7 @@ import Gio from 'gi://Gio';
 import GObject from 'gi://GObject';
 
 import { AddGameView } from 'resource:///io/github/charlieqle/Moddy/js/widgets/views/addGameView.js';
+import { GameView } from 'resource:///io/github/charlieqle/Moddy/js/widgets/views/gameView.js';
 import { HomeView } from 'resource:///io/github/charlieqle/Moddy/js/widgets/views/homeView.js';
 import { DirectoryEntryRow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/directoryEntryRow.js';
 import { GameRow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/gameRow.js';
@@ -14,6 +15,7 @@ pkg.initFormat();
 export function main(argv: string[]) {
     [
         AddGameView.$gtype,
+        GameView.$gtype,
         HomeView.$gtype,
         DirectoryEntryRow.$gtype,
         GameRow.$gtype,
