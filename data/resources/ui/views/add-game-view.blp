@@ -36,7 +36,76 @@ template AddGameView : Gtk.Box {
                 margin-start: 12;
                 margin-end: 12;
 
-                // TODO: Add entries here
+                Adw.PreferencesGroup {
+                    Adw.ComboRow presetSelector {
+                        title: "Preset";
+                        model: Gtk.StringList {
+                            strings [
+                                "None",
+                            ]
+                        };
+                        notify::selected => onPresetSelected(); 
+                    }
+                }
+
+                Adw.PreferencesGroup baseGroup {
+                    Adw.EntryRow titleEntry {
+                        title: "Game title";
+                        changed => onGameTitleChanged();
+                    }
+
+                    .DirectoryEntryRow installDirEntry {
+                        title: "Install directory";
+                        changed => onInstallDirChanged();
+                    }
+
+                    Adw.ActionRow {
+                        title: "Nexus settings";
+                        activatable-widget: nexusToggle;
+
+                        [suffix]
+                        Gtk.Switch nexusToggle {
+                            valign: center;
+                            state: bind nexusGroup.sensitive bidirectional;
+                        }
+                    }
+
+                    Adw.ActionRow {
+                        title: "Steam settings";
+                        activatable-widget: steamToggle;
+
+                        [suffix]
+                        Gtk.Switch steamToggle {
+                            valign: center;
+                            state: bind steamGroup.sensitive bidirectional;
+                        }
+                    }
+                }
+
+                Adw.PreferencesGroup nexusGroup {
+                    title: "Nexus settings";
+                    sensitive: false;
+
+                    Adw.EntryRow nexusIdEntry {
+                        title: "ID";
+                        changed => onNexusIDChanged();
+                    }
+                }
+
+                Adw.PreferencesGroup steamGroup {
+                    title: "Steam settings";
+                    sensitive: false;
+
+                    Adw.EntryRow steamAppIdEntry {
+                        title: "App ID";
+                        changed => onSteamAppIDChanged();
+                    }
+
+                    .DirectoryEntryRow steamCompatdataDirEntry {
+                        title: "Compatdata directory";
+                        changed => onSteamCompatdataDirChanged();
+                    }
+                }
             };
         };
     }

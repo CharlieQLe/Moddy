@@ -28,7 +28,6 @@
         "default-case-last": "warn",
         "default-param-last": "error",
         "curly": "warn",
-        "class-methods-use-this": "warn",
         "block-scoped-var": "warn",
         "comma-style": "warn",
         "comma-spacing": "warn",
@@ -51,6 +50,7 @@
                 "varsIgnorePattern": "^_",
                 "caughtErrorsIgnorePattern": "^_"
             }
-        ]
+        ],
+        "@typescript-eslint/no-explicit-any": "off"
     }
 }

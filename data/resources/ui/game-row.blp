@@ -1,0 +1,11 @@
+using Gtk 4.0;
+using Adw 1;
+
+template GameRow : Adw.ActionRow {
+    activatable: true;
+    action-name: "window.change-view";
+
+    Gtk.Image {
+        icon-name: "go-next-symbolic";
+    }
+}

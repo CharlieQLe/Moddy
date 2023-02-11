@@ -101,12 +101,6 @@ export class Game {
     };
     private _mods: Mod[];
 
-    static new(name: string) {
-        const game = new Game(name, getDefaultGameJson());
-        game.profiles.default = new Profile('default', getDefaultProfileJson());
-        return game;
-    }
-
     static load(name: string) {
         const jsonFile = Gio.File.new_for_path(GLib.build_filenamev([Utility.getConfigDir(), `${name}.json`]));
         if (!jsonFile.query_exists(null)) {

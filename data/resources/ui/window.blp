@@ -15,7 +15,9 @@ template Window : Adw.ApplicationWindow {
 
             Adw.LeafletPage {
                 name: "add-game";
-                child: .AddGameView addGameView { };
+                child: .AddGameView addGameView {
+                    validated => onAddGameValidated();
+                };
             }
         };
     };

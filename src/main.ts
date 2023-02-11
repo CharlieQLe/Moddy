@@ -3,6 +3,8 @@ import GObject from 'gi://GObject';
 
 import { AddGameView } from 'resource:///io/github/charlieqle/Moddy/js/widgets/views/addGameView.js';
 import { HomeView } from 'resource:///io/github/charlieqle/Moddy/js/widgets/views/homeView.js';
+import { DirectoryEntryRow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/directoryEntryRow.js';
+import { GameRow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/gameRow.js';
 import { Application } from 'resource:///io/github/charlieqle/Moddy/js/application.js';
 import * as Utility from 'resource:///io/github/charlieqle/Moddy/js/utility.js';
 
@@ -13,6 +15,8 @@ export function main(argv: string[]) {
     [
         AddGameView.$gtype,
         HomeView.$gtype,
+        DirectoryEntryRow.$gtype,
+        GameRow.$gtype,
     ].forEach(gtype => {
         GObject.type_ensure(gtype);
     })

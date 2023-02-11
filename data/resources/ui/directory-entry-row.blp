@@ -1,0 +1,23 @@
+using Gtk 4.0;
+using Adw 1;
+
+template DirectoryEntryRow : Adw.EntryRow {
+    [suffix]
+    Gtk.Button {
+        valign: center;
+        icon-name: "folder-open-symbolic";
+        clicked => onFileChooserBtnClicked();
+
+        styles [
+            "flat"
+        ]
+    }
+}
+
+Gtk.FileChooserNative fileChooser {
+    action: select_folder;
+    select-multiple: false;
+    accept-label: "Select";
+    cancel-label: "Cancel";
+    response => onFileChooserResponse();
+}

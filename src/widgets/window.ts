@@ -16,6 +16,7 @@ export class Window extends Adw.ApplicationWindow {
     private _addGameView!: AddGameView;
 
     private _addGameAction: Gio.SimpleAction;
+    private _games: Game[];
 
     static {
         GObject.registerClass({
@@ -40,6 +41,7 @@ export class Window extends Adw.ApplicationWindow {
         actionGroup.insert(this._addGameAction);
 
         // Load game files
+        this._games = [];
         const configFile = Gio.File.new_for_path(Utility.getConfigDir());
         const enumerator = configFile.enumerate_children('standard::*', Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS, null);
         while (true) {
@@ -55,10 +57,15 @@ export class Window extends Adw.ApplicationWindow {
                 }
             }
         }
+
+        // Send games
+        this._addGameView.setGames(this._games);
     }
 
     public addGame(game: Game) {
         // TODO: add game widgets
+        this._games.push(game);
+        this._homeView.addGame(game);
     }
 
     private changeViewActivate(_: Gio.SimpleAction, pagename: GLib.Variant<string>) {
@@ -72,6 +79,14 @@ export class Window extends Adw.ApplicationWindow {
     }
 
     private addGameActivate(_: Gio.SimpleAction, __: null) {
-        // TODO: Implement adding a game
+        const game = this._addGameView.createGame();
+        this.addGame(game);
+        game.save();
+        this._addGameView.clear();
+        log(`Added ${game.name}!`);
+    }
+
+    private onAddGameValidated(_: AddGameView, validatedTitle: boolean, validatedInstallDir: boolean) {
+        this._addGameAction.set_enabled(validatedTitle && validatedInstallDir);
     }
 }
