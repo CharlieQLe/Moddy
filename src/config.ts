@@ -1,6 +1,7 @@
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 import GObject from 'gi://GObject';
+import GnomeAutoar from 'gi://GnomeAutoar';
 
 import * as Utility from 'resource:///io/github/charlieqle/Moddy/js/utility.js';
 
@@ -197,6 +198,24 @@ export class Game {
 
     public get dataPath() {
         return this.json.dataDir || GLib.build_filenamev([Utility.getDataDir(), this.name]);
+    }
+
+    public installModFromFile(file: Gio.File) {
+        const filename = file.get_basename();
+        if (!filename) {
+            return false;
+        }
+        const modname = filename.substring(0, filename.lastIndexOf('.'));
+        const output = Gio.File.new_for_path(GLib.build_filenamev([this.dataPath, 'mods', modname]));
+        if (output.query_exists(null)) {
+            // TODO: Open dialog for potential override
+            return false;
+        }
+        output.make_directory_with_parents(null);
+        const extractor = GnomeAutoar.Extractor.new(file, output);
+        extractor.set_output_is_dest(true);
+        extractor.start(null);
+        return true;
     }
 
     public saveProfile(name: string) {

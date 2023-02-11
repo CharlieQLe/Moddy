@@ -9,6 +9,7 @@ import { GameRow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/gameR
 export class GameView extends Gtk.Box {
     private _profileSelector!: Adw.ComboRow;
     private _modsGroup!: Adw.PreferencesGroup;
+    private _installModChooser!: Gtk.FileChooserNative;
 
     private _title!: string;
     private _hasMods!: boolean;
@@ -20,7 +21,7 @@ export class GameView extends Gtk.Box {
         GObject.registerClass({
             GTypeName: 'GameView',
             Template: 'resource:///io/github/charlieqle/Moddy/ui/views/game-view.ui',
-            InternalChildren: ['profileSelector', 'modsGroup'],
+            InternalChildren: ['profileSelector', 'modsGroup', 'installModChooser'],
             Properties: {
                 'title': GObject.ParamSpec.string('title', 'Title', 'Window title', GObject.ParamFlags.READWRITE, ''),
                 'hasMods': GObject.ParamSpec.boolean('hasMods', 'Has mods', 'Has mods', GObject.ParamFlags.READWRITE, false),
@@ -76,9 +77,8 @@ export class GameView extends Gtk.Box {
         this._rows = [];
 
         // Add mods
-        const list = this._profileSelector.model as Gtk.StringList;
-        const profileName = list.get_string(this._profileSelector.get_selected()) || 'Default';
-        const profile = this._game.profiles[profileName];
+        const profile = this._game.profiles[(this._profileSelector.model as Gtk.StringList)
+            .get_string(this._profileSelector.get_selected()) || 'Default'];
         this.hasMods = this._game.mods.length > 0;
         this._game.mods.forEach(mod => {
             const row = new ModRow(mod);
@@ -98,10 +98,22 @@ export class GameView extends Gtk.Box {
     }
 
     private onProfileSelected(_: Adw.ComboRow, __: any) {
-        //
+        this.refreshMods();
     }
 
     private onInstallModClicked(_: Gtk.Button) {
-        //
+        this._installModChooser.show();
+    }
+
+    private onInstallModResponse(chooser: Gtk.FileChooserNative, response: Gtk.ResponseType) {
+        if (response === Gtk.ResponseType.ACCEPT) {
+            const file = chooser.get_file();
+            if (file) {
+                const ok = this._game.installModFromFile(file);
+                if (ok) {
+                    this.refreshMods();
+                }
+            }
+        }
     }
 }

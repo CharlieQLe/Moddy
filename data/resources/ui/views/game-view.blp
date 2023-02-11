@@ -96,3 +96,23 @@ template GameView : Gtk.Box {
         reveal: true;
     }
 }
+
+Gtk.FileChooserNative installModChooser {
+    action: open;
+    filter: Gtk.FileFilter {
+        name: "Archives";
+        mime-types [
+            "application/zip",
+            "application/x-7z-compressed",
+            "application/vnd.rar",
+            "application/x-tar",
+            "application/x-bzip",
+            "application/x-bzip2",
+            "application/gz",
+        ]
+    };
+    select-multiple: false;
+    accept-label: "Open";
+    cancel-label: "Cancel";
+    response => onInstallModResponse();
+}

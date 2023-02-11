@@ -1,0 +1,11 @@
+{
+    "name": "gnome-autoar",
+    "buildsystem": "meson",
+    "sources": [
+        {
+            "type": "git",
+            "url": "https://gitlab.gnome.org/GNOME/gnome-autoar",
+            "tag": "0.4.3"
+        }
+    ]
+}
