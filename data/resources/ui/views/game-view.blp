@@ -78,6 +78,17 @@ template GameView : Gtk.Box {
                 icon-name: "preferences-system-privacy-symbolic";
             };
         }
+
+        Adw.ViewStackPage {
+            name: "play";
+            title: "Play";
+            icon-name: "media-playback-start-symbolic";
+            child: Adw.StatusPage {
+                title: "This page is under construction!";
+                description: "Play will be available in a future version!";
+                icon-name: "preferences-system-privacy-symbolic";
+            };
+        }
     }
 
     Adw.ViewSwitcherBar {
