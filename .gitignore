@@ -1,4 +1,6 @@
 node_modules/*
 .flatpak/*
 .vscode/
+.flatpak-builder/
+/builddir/
 /subprojects/blueprint-compiler

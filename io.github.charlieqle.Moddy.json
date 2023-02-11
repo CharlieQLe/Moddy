@@ -7,6 +7,12 @@
         "org.freedesktop.Sdk.Extension.node18"
     ],
     "command" : "moddy",
+    "build-options": {
+        "append-path": "/usr/lib/sdk/node18/bin",
+        "env": {
+            "npm_config_nodedir": "/usr/lib/sdk/node18"
+        }  
+    },
     "finish-args" : [
         "--share=network",
         "--share=ipc",
