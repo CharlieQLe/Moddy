@@ -22,6 +22,7 @@ export function getDefaultGameJson(): GameJson {
 export interface ProfileJson {
     modOrder: string[],
     enabledMods: string[],
+    [key: string]: any,
 }
 
 export interface GameJson {
@@ -36,6 +37,7 @@ export interface GameJson {
         appid: string,
         compatdataDir: string,
     },
+    [key: string]: any,
 }
 
 export class Mod extends GObject.Object {
