@@ -24,6 +24,7 @@ moddy/
     ├ overwrite/
     ├ profiles/
     | └ profilename.json
+    ├ work/
     └ metadata.json
 ```
 
@@ -36,3 +37,5 @@ Mods are subdirectories stored in the mods subdirectory of the game folder.
 Downloads contains downloaded mod archives. Mod archives that are placed here manually will also show up as completed downloads.
 
 Overwrite is meant for an OverlayFS-based deployment mechanism- new files are placed here if they are generated while mods are deployed.
+
+Work is meant for an OverlayFS-based deployment mechanism.
