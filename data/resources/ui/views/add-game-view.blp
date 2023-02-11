@@ -58,35 +58,16 @@ template AddGameView : Gtk.Box {
                         title: "Install directory";
                         changed => onInstallDirChanged();
                     }
-
-                    Adw.ActionRow {
-                        title: "Nexus settings";
-                        activatable-widget: nexusToggle;
-
-                        [suffix]
-                        Gtk.Switch nexusToggle {
-                            valign: center;
-                            state: bind nexusGroup.sensitive bidirectional;
-                        }
-                    }
-
-                    Adw.ActionRow {
-                        title: "Steam settings";
-                        activatable-widget: steamToggle;
-
-                        [suffix]
-                        Gtk.Switch steamToggle {
-                            valign: center;
-                            state: bind steamGroup.sensitive bidirectional;
-                        }
-                    }
                 }
 
                 Adw.PreferencesGroup nexusGroup {
                     title: "Nexus settings";
-                    sensitive: false;
+                    header-suffix: Gtk.Switch nexusSwitch {
+                        valign: center;
+                    };
 
                     Adw.EntryRow nexusIdEntry {
+                        sensitive: bind nexusSwitch.state bidirectional;
                         title: "ID";
                         changed => onNexusIDChanged();
                     }
@@ -94,14 +75,18 @@ template AddGameView : Gtk.Box {
 
                 Adw.PreferencesGroup steamGroup {
                     title: "Steam settings";
-                    sensitive: false;
+                    header-suffix: Gtk.Switch steamSwitch {
+                        valign: center;
+                    };
 
                     Adw.EntryRow steamAppIdEntry {
+                        sensitive: bind steamSwitch.state bidirectional;
                         title: "App ID";
                         changed => onSteamAppIDChanged();
                     }
 
                     .DirectoryEntryRow steamCompatdataDirEntry {
+                        sensitive: bind steamSwitch.state bidirectional;
                         title: "Compatdata directory";
                         changed => onSteamCompatdataDirChanged();
                     }
