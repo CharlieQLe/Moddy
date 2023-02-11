@@ -8,7 +8,6 @@ import { Game, GameJson, Profile, getDefaultProfileJson } from 'resource:///io/g
 
 export class AddGameView extends Gtk.Box {
     private _presetSelector!: Adw.ComboRow;
-    private _baseGroup!: Adw.PreferencesGroup;
     private _titleEntry!: Adw.EntryRow;
     private _installDirEntry!: DirectoryEntryRow;
     private _nexusGroup!: Adw.PreferencesGroup;
@@ -25,7 +24,7 @@ export class AddGameView extends Gtk.Box {
         GObject.registerClass({
             GTypeName: 'AddGameView',
             Template: 'resource:///io/github/charlieqle/Moddy/ui/views/add-game-view.ui',
-            InternalChildren: ['presetSelector', 'baseGroup', 'titleEntry', 'installDirEntry', 'nexusGroup',
+            InternalChildren: ['presetSelector', 'titleEntry', 'installDirEntry', 'nexusGroup',
                 'nexusIdEntry', 'steamGroup', 'steamAppIdEntry', 'steamCompatdataDirEntry'],
             Signals: {
                 'validated': {
@@ -83,12 +82,9 @@ export class AddGameView extends Gtk.Box {
 
     private onPresetSelected(_: Adw.ComboRow, __: any) {
         const index = this._presetSelector.get_selected();
-        if (index === 0) {
-            this._baseGroup.set_sensitive(true);
-        } else {
-            this._baseGroup.set_sensitive(false);
-            // TODO: Handle selected preset
-        }
+
+        // TODO: Handle selected preset
+
     }
 
     private onGameTitleChanged(row: Adw.EntryRow) {

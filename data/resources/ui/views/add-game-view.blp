@@ -48,7 +48,7 @@ template AddGameView : Gtk.Box {
                     }
                 }
 
-                Adw.PreferencesGroup baseGroup {
+                Adw.PreferencesGroup {
                     Adw.EntryRow titleEntry {
                         title: "Game title";
                         changed => onGameTitleChanged();
