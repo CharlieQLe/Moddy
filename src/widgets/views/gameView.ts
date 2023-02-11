@@ -10,6 +10,7 @@ export class GameView extends Gtk.Box {
     private _profileSelector!: Adw.ComboRow;
     private _modsGroup!: Adw.PreferencesGroup;
     private _installModChooser!: Gtk.FileChooserNative;
+    private _deploySwitch!: Gtk.Switch;
 
     private _title!: string;
     private _hasMods!: boolean;
@@ -17,12 +18,13 @@ export class GameView extends Gtk.Box {
     private _window: Gtk.Window;
     private _game: Game;
     private _rows: GameRow[];
+    private _toastOverlay: Adw.ToastOverlay;
 
     static {
         GObject.registerClass({
             GTypeName: 'GameView',
             Template: 'resource:///io/github/charlieqle/Moddy/ui/views/game-view.ui',
-            InternalChildren: ['profileSelector', 'modsGroup', 'installModChooser'],
+            InternalChildren: ['profileSelector', 'modsGroup', 'installModChooser', 'deploySwitch'],
             Properties: {
                 'title': GObject.ParamSpec.string('title', 'Title', 'Window title', GObject.ParamFlags.READWRITE, ''),
                 'hasMods': GObject.ParamSpec.boolean('hasMods', 'Has mods', 'Has mods', GObject.ParamFlags.READWRITE, false),
@@ -30,10 +32,11 @@ export class GameView extends Gtk.Box {
         }, this);
     }
 
-    constructor(game: Game, window: Gtk.Window) {
+    constructor(game: Game, window: Gtk.Window, toastOverlay: Adw.ToastOverlay) {
         super();
         this._game = game;
         this._window = window;
+        this._toastOverlay = toastOverlay;
         this._rows = [];
         this.title = game.name;
 
@@ -51,6 +54,9 @@ export class GameView extends Gtk.Box {
 
         // Handle mods
         this.refreshMods();
+
+        // Handle deployment
+        this._deploySwitch.set_state(this._game.isDeployed);
     }
 
     public get title() {
@@ -100,8 +106,6 @@ export class GameView extends Gtk.Box {
         });
         this._rows = [];
 
-        // Find new mods
-
         // Add mods
         const profileName = (this._profileSelector.model as Gtk.StringList).get_string(this._profileSelector.get_selected()) || 'Default';
         const profile = this._game.profiles[profileName];
@@ -141,6 +145,20 @@ export class GameView extends Gtk.Box {
                     this.refreshMods();
                 }
             }
+        }
+    }
+
+    private onDeployStateSet(_: Gtk.Switch, __: any) {
+        if (this._deploySwitch.get_active()) {
+            this._game.deploy();
+            if (!this._game.isDeployed) {
+                this._deploySwitch.set_active(false);
+                if (this._toastOverlay) {
+                    this._toastOverlay.add_toast(Adw.Toast.new('Could not deploy mods!'));
+                }
+            }
+        } else if (this._game.isDeployed) {
+            this._game.purge();
         }
     }
 }

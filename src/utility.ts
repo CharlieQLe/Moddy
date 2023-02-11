@@ -7,3 +7,7 @@ export function getConfigDir() {
 export function getDataDir() {
     return GLib.build_filenamev([GLib.get_user_data_dir(), 'moddy']);
 }
+
+export function spawn(...args: string[]) {
+    return GLib.spawn_command_line_sync(['/usr/bin/flatpak-spawn', '--host', ...args].join(' '));
+}

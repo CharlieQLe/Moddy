@@ -35,6 +35,7 @@ template GameView : Gtk.Box {
                         margin-end: 12;
 
                         Adw.PreferencesGroup {
+                            sensitive: bind deploySwitch.state inverted;
                             Adw.ComboRow profileSelector {
                                 title: "Profiles";
                                 model: Gtk.StringList { };
@@ -43,6 +44,7 @@ template GameView : Gtk.Box {
                         }
 
                         Adw.PreferencesGroup modsGroup {
+                            sensitive: bind deploySwitch.state inverted;
                             title: "Mods";
                             header-suffix: Gtk.Button {
                                 valign: center;
@@ -83,10 +85,31 @@ template GameView : Gtk.Box {
             name: "play";
             title: "Play";
             icon-name: "media-playback-start-symbolic";
-            child: Adw.StatusPage {
-                title: "This page is under construction!";
-                description: "Play will be available in a future version!";
-                icon-name: "preferences-system-privacy-symbolic";
+            child: Gtk.ScrolledWindow {
+                child: Adw.Clamp {
+                    child: Gtk.Box {
+                        orientation: vertical;
+                        spacing: 24;
+                        margin-top: 24;
+                        margin-bottom: 24;
+                        margin-start: 12;
+                        margin-end: 12;
+
+                        Adw.PreferencesGroup {
+                            Adw.ActionRow {
+                                title: "Deploy mods";
+                                subtitle: "This will lock the mods page!";
+                                activatable-widget: deploySwitch;
+
+                                [suffix]
+                                Gtk.Switch deploySwitch {
+                                    valign: center;
+                                    notify::active => onDeployStateSet();
+                                }
+                            }
+                        }
+                    };
+                };
             };
         }
     }

@@ -66,7 +66,7 @@ export class Window extends Adw.ApplicationWindow {
     public addGame(game: Game) {
         this._games.push(game);
         this._homeView.addGame(game);
-        this._leaflet.append(new GameView(game, this))
+        this._leaflet.append(new GameView(game, this, this._toastOverlay))
             .set_name(`game-${game.name}`);
     }
 

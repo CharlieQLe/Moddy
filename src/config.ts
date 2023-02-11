@@ -157,6 +157,56 @@ export class Game {
         return this.json.dataDir || GLib.build_filenamev([Utility.getDataDir(), this.name]);
     }
 
+    public get modTargetPath() {
+        const paths = [this._json.installDir];
+        if (this._json.relativeModPath.length > 0) {
+            paths.push(this._json.relativeModPath);
+        }
+        return GLib.build_filenamev(paths);
+    }
+
+    public get isDeployed() {
+        const path = this.modTargetPath;
+        if (!Gio.File.new_for_path(path).query_exists(null)) {
+            return false;
+        }
+        const [ok, _, __, exit] = Utility.spawn('mountpoint', path);
+        return ok && exit === 0;
+    }
+
+    public deploy() {
+        if (this.isDeployed) {
+            return false;
+        }
+        const path = this.modTargetPath;
+        const upperdir = GLib.build_filenamev([this.dataPath, 'overwrite']);
+        const workdir = GLib.build_filenamev([this.dataPath, 'work']);
+        const selectedProfile = this.profiles[this.json.selectedProfile || 'Default'];
+        const lower: string[] = [path];
+        selectedProfile.json.modOrder.filter(modname => selectedProfile.json.enabledMods.includes(modname))
+            .map(modname => GLib.build_filenamev([this.dataPath, 'mods', modname]))
+            .reverse()
+            .forEach(path => {
+                lower.push(path);
+            });
+        const [ok, _, stderr, exit] = Utility.spawn('pkexec', 'mount', '-t', 'overlay', 'overlay', `"-olowerdir=${lower.join(':')},upperdir=${upperdir},workdir=${workdir}"`, `"${path}"`);
+        log(`mount -t overlay overlay -olowerdir=${lower.join(':')},upperdir=${upperdir},workdir=${workdir} ${path}`);
+        const decoder = new TextDecoder();
+        if (stderr) {
+            log(decoder.decode(stderr));
+        }
+        return ok && exit === 0 && this.isDeployed;
+    }
+
+    public purge() {
+        if (!this.isDeployed) {
+            return false;
+        }
+        const path = this.modTargetPath;
+        const [ok, _, __, exit] = Utility.spawn('pkexec', 'umount', path);
+        return ok && exit === 0 && !this.isDeployed;
+    }
+
     public refresh() {
         const dataFile = Gio.File.new_for_path(this.dataPath);
         if (!dataFile.query_exists(null)) {
@@ -283,6 +333,7 @@ export class Game {
             dataFile.get_child('downloads'),
             dataFile.get_child('overwrite'),
             dataFile.get_child('mods'),
+            dataFile.get_child('work'),
             profilesFile,
         ].forEach(file => {
             if (!file.query_exists(null)) {
