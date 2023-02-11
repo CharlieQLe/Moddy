@@ -24,24 +24,26 @@ template GameView : Gtk.Box {
             name: "mods";
             title: "Mods";
             icon-name: "preferences-system-symbolic";
-            child: Adw.Clamp {
-                Gtk.Box {
-                    orientation: vertical;
-                    spacing: 24;
-                    margin-top: 24;
-                    margin-bottom: 24;
-                    margin-start: 12;
-                    margin-end: 12;
+            child: Gtk.ScrolledWindow {
+                child: Adw.Clamp {
+                    Gtk.Box {
+                        orientation: vertical;
+                        spacing: 24;
+                        margin-top: 24;
+                        margin-bottom: 24;
+                        margin-start: 12;
+                        margin-end: 12;
 
-                    Adw.PreferencesGroup {
-                        Adw.ComboRow profileSelector {
-                            title: "Profiles";
-                            model: Gtk.StringList { };
-                            notify::selected => onProfileSelected();
+                        Adw.PreferencesGroup {
+                            Adw.ComboRow profileSelector {
+                                title: "Profiles";
+                                model: Gtk.StringList { };
+                                notify::selected => onProfileSelected();
+                            }
                         }
+                        
                     }
-                    
-                }
+                };
             };
         }
 
