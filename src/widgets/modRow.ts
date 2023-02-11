@@ -14,8 +14,13 @@ export class ModRow extends Adw.ActionRow {
             Template: 'resource:///io/github/charlieqle/Moddy/ui/mod-row.ui',
             InternalChildren: ['modToggle'],
             Properties: {
-                'mod': GObject.ParamSpec.object('mod', 'Mod', 'Mod', GObject.ParamFlags.READWRITE, Mod),
+                'mod': GObject.ParamSpec.object('mod', 'Mod', 'Mod', GObject.ParamFlags.READABLE, Mod),
             },
+            Signals: {
+                'state-updated': {
+                    param_types: [GObject.TYPE_BOOLEAN],
+                },
+            }
         }, this);
     }
 
@@ -30,16 +35,12 @@ export class ModRow extends Adw.ActionRow {
         return this._mod || new Mod('');
     }
 
-    public set mod(mod: Mod) {
-        this._mod = mod;
-        this.notify('mod');
-    }
-
     public setModState(state: boolean) {
         this._modToggle.set_state(state);
     }
 
     private onModStateSet(_: Gtk.Switch, state: boolean) {
         this._mod.enabled = state;
+        this.emit('state-updated', this._mod.enabled);
     }
 }

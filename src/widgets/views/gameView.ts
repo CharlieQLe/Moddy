@@ -3,7 +3,8 @@ import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 
 import { ModRow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/modRow.js';
-import { Game, Profile, Mod } from 'resource:///io/github/charlieqle/Moddy/js/config.js';
+import { Game } from 'resource:///io/github/charlieqle/Moddy/js/config.js';
+import { GameRow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/gameRow.js';
 
 export class GameView extends Gtk.Box {
     private _profileSelector!: Adw.ComboRow;
@@ -13,7 +14,7 @@ export class GameView extends Gtk.Box {
     private _hasMods!: boolean;
 
     private _game: Game;
-    private _profiles: Profile[];
+    private _rows: GameRow[];
 
     static {
         GObject.registerClass({
@@ -30,30 +31,23 @@ export class GameView extends Gtk.Box {
     constructor(game: Game) {
         super();
         this._game = game;
-        this._profiles = [];
+        this._rows = [];
         this.title = game.name;
+
+        // Select profile
+        const selectedProfile = game.profiles[game.json.selectedProfile];
         const list = this._profileSelector.model as Gtk.StringList;
+        let i = 0;
         for (const [name, profile] of Object.entries(game.profiles)) {
             list.append(name);
-            this._profiles.push(profile);
+            if (profile === selectedProfile) {
+                this._profileSelector.set_selected(i);
+            }
+            i++;
         }
-        const selectedProfile = game.profiles[game.json.selectedProfile];
-        const index = this._profiles.indexOf(selectedProfile);
-        this._profileSelector.set_selected(index);
-        this.hasMods = game.mods.length > 0;
-        game.mods.forEach(mod => {
-            const row = new ModRow(mod);
-            this._modsGroup.add(row);
-            row.setModState(selectedProfile.json.enabledMods.includes(mod.name));
-            mod.connect('notify::enabled', (_: Mod, __: GObject.ParamSpec<boolean>) => {
-                if (mod.enabled && !selectedProfile.json.enabledMods.includes(mod.name)) {
-                    selectedProfile.json.enabledMods.push(mod.name);
-                } else if (!mod.enabled && selectedProfile.json.enabledMods.includes(mod.name)) {
-                    selectedProfile.json.enabledMods = selectedProfile.json.enabledMods.filter(name => name !== mod.name);
-                }
-                game.saveProfile(selectedProfile.name);
-            });
-        });
+
+        // Handle mods
+        this.refreshMods();
     }
 
     public get title() {
@@ -72,6 +66,35 @@ export class GameView extends Gtk.Box {
     public set hasMods(hasMods: boolean) {
         this._hasMods = hasMods;
         this.notify('hasMods');
+    }
+
+    private refreshMods() {
+        // Clear rows
+        this._rows.forEach(row => {
+            this._modsGroup.remove(row);
+        });
+        this._rows = [];
+
+        // Add mods
+        const list = this._profileSelector.model as Gtk.StringList;
+        const profileName = list.get_string(this._profileSelector.get_selected()) || 'Default';
+        const profile = this._game.profiles[profileName];
+        this.hasMods = this._game.mods.length > 0;
+        this._game.mods.forEach(mod => {
+            const row = new ModRow(mod);
+            row.setModState(profile.json.enabledMods.includes(mod.name));
+            row.connect('state-updated', (_: ModRow, __: boolean) => {
+                if (mod.enabled && !profile.json.enabledMods.includes(mod.name)) {
+                    profile.json.enabledMods.push(mod.name);
+                    this._game.saveProfile(profile.name);
+                } else if (!mod.enabled && profile.json.enabledMods.includes(mod.name)) {
+                    profile.json.enabledMods = profile.json.enabledMods.filter(name => name !== mod.name);
+                    this._game.saveProfile(profile.name);
+                }
+            });
+            this._modsGroup.add(row);
+            this._rows.push(row);
+        });
     }
 
     private onProfileSelected(_: Adw.ComboRow, __: any) {
