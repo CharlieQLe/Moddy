@@ -190,7 +190,6 @@ export class Game {
                 lower.push(path);
             });
         const [ok, _, stderr, exit] = Utility.spawn('pkexec', 'mount', '-t', 'overlay', 'overlay', `"-olowerdir=${lower.join(':')},upperdir=${upperdir},workdir=${workdir}"`, `"${path}"`);
-        log(`mount -t overlay overlay -olowerdir=${lower.join(':')},upperdir=${upperdir},workdir=${workdir} ${path}`);
         const decoder = new TextDecoder();
         if (stderr) {
             log(decoder.decode(stderr));
