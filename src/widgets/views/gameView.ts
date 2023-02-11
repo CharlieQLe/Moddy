@@ -76,18 +76,21 @@ export class GameView extends Gtk.Box {
         });
         this._rows = [];
 
+        // Find new mods
+
         // Add mods
-        const profile = this._game.profiles[(this._profileSelector.model as Gtk.StringList)
-            .get_string(this._profileSelector.get_selected()) || 'Default'];
+        const profileName = (this._profileSelector.model as Gtk.StringList).get_string(this._profileSelector.get_selected()) || 'Default';
+        const profile = this._game.profiles[profileName];
+        const enabledMods = this._game.getEnabledModsForProfile(profileName);
         this.hasMods = this._game.mods.length > 0;
         this._game.mods.forEach(mod => {
             const row = new ModRow(mod);
             row.setModState(profile.json.enabledMods.includes(mod.name));
             row.connect('state-updated', (_: ModRow, __: boolean) => {
-                if (mod.enabled && !profile.json.enabledMods.includes(mod.name)) {
+                if (mod.enabled && !enabledMods.includes(mod)) {
                     profile.json.enabledMods.push(mod.name);
                     this._game.saveProfile(profile.name);
-                } else if (!mod.enabled && profile.json.enabledMods.includes(mod.name)) {
+                } else if (!mod.enabled && enabledMods.includes(mod)) {
                     profile.json.enabledMods = profile.json.enabledMods.filter(name => name !== mod.name);
                     this._game.saveProfile(profile.name);
                 }

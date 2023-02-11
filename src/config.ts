@@ -116,56 +116,13 @@ export class Game {
         const decoder = new TextDecoder();
         const json = JSON.parse(decoder.decode(contents)) as GameJson;
         const game = new Game(name, json);
-        const dataPath = game.dataPath;
-        const dataFile = Gio.File.new_for_path(dataPath);
+        const dataFile = Gio.File.new_for_path(game.dataPath);
         if (!dataFile.query_exists(null)) {
             return null;
         }
-
-        // Load profiles
-        const profilesFile = dataFile.get_child('profiles');
-        if (!profilesFile.query_exists(null)) {
+        if (!game.refresh()) {
             return null;
         }
-        const profilesEnumerator = profilesFile.enumerate_children('standard::*', Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS, null);
-        while (true) {
-            const info = profilesEnumerator.next_file(null);
-            if (!info) {
-                break;
-            }
-            const filename = info.get_name();
-            if (info.get_file_type() === Gio.FileType.REGULAR && filename.endsWith('.json')) {
-                const profilename = filename.substring(0, filename.length - 5);
-                const [ok, contents] = profilesFile.get_child(filename).load_contents(null);
-                if (ok) {
-                    game.profiles[profilename] = new Profile(profilename, JSON.parse(decoder.decode(contents)) as ProfileJson);
-                }
-            }
-        }
-
-        // Load mods
-        const modsFile = dataFile.get_child('mods');
-        if (!modsFile.query_exists(null)) {
-            return null;
-        }
-        const modsEnumerator = modsFile.enumerate_children('standard::*', Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS, null);
-        while (true) {
-            const info = modsEnumerator.next_file(null);
-            if (!info) {
-                break;
-            }
-            if (info.get_file_type() === Gio.FileType.DIRECTORY) {
-                game.mods.push(new Mod(info.get_name()));
-            }
-        }
-
-        // Add new mods to the list
-        for (const profile of Object.values(game.profiles)) {
-            const names = game.mods.map(mod => mod.name);
-            profile.json.modOrder = profile.json.modOrder.filter(name => names.includes(name));
-            profile.json.modOrder.push(...names.filter(name => !profile.json.modOrder.includes(name)));
-        }
-        game.save();
         return game;
     }
 
@@ -200,6 +157,64 @@ export class Game {
         return this.json.dataDir || GLib.build_filenamev([Utility.getDataDir(), this.name]);
     }
 
+    public refresh() {
+        const dataFile = Gio.File.new_for_path(this.dataPath);
+        if (!dataFile.query_exists(null)) {
+            return false;
+        }
+
+        // Load new profiles
+        const profilesFile = dataFile.get_child('profiles');
+        if (!profilesFile.query_exists(null)) {
+            return false;
+        }
+        const decoder = new TextDecoder();
+        const profilesEnumerator = profilesFile.enumerate_children('standard::*', Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS, null);
+        while (true) {
+            const info = profilesEnumerator.next_file(null);
+            if (!info) {
+                break;
+            }
+            const filename = info.get_name();
+            if (info.get_file_type() === Gio.FileType.REGULAR && filename.endsWith('.json')) {
+                const profilename = filename.substring(0, filename.length - 5);
+                if (!(profilename in this.profiles)) {
+                    const [ok, contents] = profilesFile.get_child(filename).load_contents(null);
+                    if (ok) {
+                        this.profiles[profilename] = new Profile(profilename, JSON.parse(decoder.decode(contents)) as ProfileJson);
+                    }
+                }
+            }
+        }
+
+        // Load mods
+        const modsFile = dataFile.get_child('mods');
+        if (!modsFile.query_exists(null)) {
+            return false;
+        }
+        const modNames = this.mods.map(mod => mod.name);
+        const modsEnumerator = modsFile.enumerate_children('standard::*', Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS, null);
+        while (true) {
+            const info = modsEnumerator.next_file(null);
+            if (!info) {
+                break;
+            }
+            const modname = info.get_name();
+            if (info.get_file_type() === Gio.FileType.DIRECTORY && !modNames.includes(modname)) {
+                this.mods.push(new Mod(modname));
+            }
+        }
+
+        // Add new mods to the list
+        for (const profile of Object.values(this.profiles)) {
+            const names = this.mods.map(mod => mod.name);
+            profile.json.modOrder = profile.json.modOrder.filter(name => names.includes(name));
+            profile.json.modOrder.push(...names.filter(name => !profile.json.modOrder.includes(name)));
+        }
+        this.save();
+        return true;
+    }
+
     public installModFromFile(file: Gio.File) {
         const filename = file.get_basename();
         if (!filename) {
@@ -215,7 +230,16 @@ export class Game {
         const extractor = GnomeAutoar.Extractor.new(file, output);
         extractor.set_output_is_dest(true);
         extractor.start(null);
+        this.refresh();
         return true;
+    }
+
+    public getEnabledModsForProfile(profilename: string) {
+        if (!(profilename in this.profiles)) {
+            return [];
+        }
+        const profile = this.profiles[profilename];
+        return this.mods.filter(mod => profile.json.enabledMods.includes(mod.name));
     }
 
     public saveProfile(name: string) {
