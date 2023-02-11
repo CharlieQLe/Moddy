@@ -1,0 +1,58 @@
+using Gtk 4.0;
+using Adw 1;
+
+template ModRow : Adw.ActionRow {
+    [prefix]
+    Gtk.Image {
+        icon-name: "list-drag-handle-symbolic";
+        
+        styles [
+            "dim-label"
+        ]
+    }
+
+    [suffix]
+    Gtk.Switch modToggle {
+        valign: center;
+        state-set => onModStateSet();
+    }
+
+    [suffix]
+    Gtk.Separator {
+        orientation: vertical;
+        margin-top: 12;
+        margin-bottom: 12;
+    }
+
+    [suffix]
+    Gtk.MenuButton {
+        valign: center;
+        icon-name: "view-more-symbolic";
+        menu-model: primary_menu;
+
+        styles [
+            "flat"
+        ]
+    }
+}
+
+menu primary_menu {
+    section {
+        item {
+            label: "Move up";
+            action: "mod.move-up";
+        }
+
+        item {
+            label: "Move down";
+            action: "mod.move-down";
+        }
+    }
+
+    section {
+        item {
+            label: "Uninstall";
+            action: "mod.uninstall";
+        }
+    }
+}

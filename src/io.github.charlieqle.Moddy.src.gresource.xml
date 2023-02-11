@@ -6,6 +6,7 @@
     <file>widgets/views/homeView.js</file>
     <file>widgets/directoryEntryRow.js</file>
     <file>widgets/gameRow.js</file>
+    <file>widgets/modRow.js</file>
     <file>widgets/window.js</file>
     <file>application.js</file>
     <file>config.js</file>

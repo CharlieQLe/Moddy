@@ -158,6 +158,13 @@ export class Game {
             }
         }
 
+        // Add new mods to the list
+        for (const profile of Object.values(game.profiles)) {
+            const names = game.mods.map(mod => mod.name);
+            profile.json.modOrder = profile.json.modOrder.filter(name => names.includes(name));
+            profile.json.modOrder.push(...names.filter(name => !profile.json.modOrder.includes(name)));
+        }
+        game.save();
         return game;
     }
 
@@ -197,7 +204,7 @@ export class Game {
             return;
         }
         const profileFile = Gio.File.new_for_path(GLib.build_filenamev([this.dataPath, 'profiles', `${name}.json`]));
-        const contents = new TextEncoder().encode(JSON.stringify(this.profiles[name], null, 4));
+        const contents = new TextEncoder().encode(JSON.stringify(this.profiles[name].json, null, 4));
         if (profileFile.query_exists(null)) {
             profileFile.replace_contents(contents, null, false, Gio.FileCreateFlags.NONE, null);
         } else {

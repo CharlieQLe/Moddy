@@ -41,6 +41,27 @@ template GameView : Gtk.Box {
                                 notify::selected => onProfileSelected();
                             }
                         }
+
+                        Adw.PreferencesGroup modsGroup {
+                            title: "Mods";
+                            header-suffix: Gtk.Button {
+                                valign: center;
+                                clicked => onInstallModClicked();
+                                child: Adw.ButtonContent {
+                                    label: "Install mod";
+                                    icon-name: "insert-object-symbolic";
+                                };
+
+                                styles [
+                                    "flat"
+                                ]
+                            };
+
+                            Adw.ActionRow {
+                                visible: bind GameView.hasMods inverted;
+                                title: "No mods found";
+                            }
+                        }
                         
                     }
                 };
