@@ -56,7 +56,6 @@ flatpak-builder --force-clean --install --user -y builddir io.github.charlieqle.
 ## <strong>Future</strong>
 
 * Allow creation of multiple profiles
-* Allow renaming profiles
 * Allow renaming mods
 * Allow reordering mods
 * Allow deleting configurations
