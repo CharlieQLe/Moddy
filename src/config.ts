@@ -343,6 +343,33 @@ export class Game {
         }
     }
 
+    public removeProfile(name: string) {
+        if (!(name in this.profiles)) {
+            return false;
+        }
+        const profileFile = Gio.File.new_for_path(GLib.build_filenamev([this.dataPath, 'profiles', `${name}.json`]));
+        if (!profileFile.query_exists(null)) {
+            return false;
+        }
+
+        if (!profileFile.delete(null)) {
+            return false;
+        }
+
+        const profiles: {
+            [name: string]: Profile,
+        } = {};
+        for (const [profileName, profile] of Object.entries(this.profiles)) {
+            if (profileName !== name) {
+                profiles[profileName] = profile;
+            }
+        }
+        this._profiles = profiles;
+
+        this.save();
+        return true;
+    }
+
     public renameProfile(name: string, newName: string) {
         if (!(name in this.profiles) || newName in this.profiles) {
             return false;

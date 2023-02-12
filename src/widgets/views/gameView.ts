@@ -23,6 +23,8 @@ export class GameView extends Gtk.Box {
     private _rows: GameRow[];
     private _toastOverlay: Adw.ToastOverlay;
 
+    private _profileDeleteAction: Gio.SimpleAction;
+
     static {
         GObject.registerClass({
             GTypeName: 'GameView',
@@ -42,24 +44,6 @@ export class GameView extends Gtk.Box {
         this._toastOverlay = toastOverlay;
         this._rows = [];
         this.title = game.name;
-
-        // Select profile
-        const selectedProfile = game.profiles[game.json.selectedProfile];
-        const list = this._profileSelector.model as Gtk.StringList;
-        let i = 0;
-        for (const [name, profile] of Object.entries(game.profiles)) {
-            list.append(name);
-            if (profile === selectedProfile) {
-                this._profileSelector.set_selected(i);
-            }
-            i++;
-        }
-
-        // Handle mods
-        this.refreshMods();
-
-        // Handle deployment
-        this._deploySwitch.set_state(this._game.isDeployed);
 
         // Profile actions
         const profileActions = Gio.SimpleActionGroup.new();
@@ -97,11 +81,48 @@ export class GameView extends Gtk.Box {
         });
         profileActions.insert(profileSettingsAction);
 
-        const profileDeleteAction = Gio.SimpleAction.new('delete', null);
-        profileDeleteAction.connect('activate', (_: Gio.SimpleAction, __: null) => {
-            //
+        this._profileDeleteAction = Gio.SimpleAction.new('delete', null);
+        this._profileDeleteAction.connect('activate', (_: Gio.SimpleAction, __: null) => {
+            const profile = this.selectedProfile;
+            if (!profile) {
+                return; // TODO: print error
+            }
+            const dialog = Adw.MessageDialog.new(this._window, `Remove profile ${profile.name}?`, 'This action cannot be undone!');
+            dialog.add_response('cancel', 'Cancel');
+            dialog.add_response('remove', 'Remove');
+            dialog.set_response_appearance('remove', Adw.ResponseAppearance.DESTRUCTIVE);
+            dialog.connect('response', (_: Adw.MessageDialog, response: string) => {
+                if (response === 'remove' && this._game.removeProfile(profile.name)) {
+                    let index = this._profileSelector.get_selected();
+                    const list = (this._profileSelector.model as Gtk.StringList);
+                    list.splice(index, 1, null);
+                    if (index >= list.get_n_items()) {
+                        index = list.get_n_items() - 1;
+                    }
+                    this._profileSelector.set_selected(index);
+                }
+            });
+            dialog.show();
         });
-        profileActions.insert(profileDeleteAction);
+        profileActions.insert(this._profileDeleteAction);
+
+        // Select profile
+        const selectedProfile = game.profiles[game.json.selectedProfile];
+        const list = this._profileSelector.model as Gtk.StringList;
+        let i = 0;
+        for (const [name, profile] of Object.entries(game.profiles)) {
+            list.append(name);
+            if (profile === selectedProfile) {
+                this._profileSelector.set_selected(i);
+            }
+            i++;
+        }
+
+        // Handle mods
+        this.refreshMods();
+
+        // Handle deployment
+        this._deploySwitch.set_state(this._game.isDeployed);
     }
 
     public get title() {
@@ -123,7 +144,9 @@ export class GameView extends Gtk.Box {
     }
 
     public get selectedProfile() {
-        const profileName = (this._profileSelector.model as Gtk.StringList).get_string(this._profileSelector.get_selected());
+        const list = this._profileSelector.model as Gtk.StringList;
+        this._profileDeleteAction.set_enabled(list.get_n_items() > 1);
+        const profileName = list.get_string(this._profileSelector.get_selected());
         return profileName ? this._game.profiles[profileName] : null;
     }
 
