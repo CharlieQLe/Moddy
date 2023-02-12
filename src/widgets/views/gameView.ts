@@ -166,6 +166,7 @@ export class GameView extends Gtk.Box {
         dialog.set_response_appearance('uninstall', Adw.ResponseAppearance.DESTRUCTIVE);
         dialog.connect('response', (_: Adw.MessageDialog, response: string) => {
             if (response === 'uninstall' && this._game.uninstallMod(row.mod)) {
+                this._rows.splice(this._rows.indexOf(row), 1);
                 this._modsGroup.remove(row);
                 this.hasMods = this._game.mods.length > 0;
             }
@@ -185,16 +186,15 @@ export class GameView extends Gtk.Box {
         if (!profile) {
             return; // TODO: print error
         }
-        const enabledMods = this._game.getEnabledModsForProfile(profile.name);
         this.hasMods = this._game.mods.length > 0;
         this._game.mods.forEach(mod => {
             const row = new ModRow(mod, this);
             row.setModState(profile.json.enabledMods.includes(mod.name));
             row.connect('state-updated', (_: ModRow, __: boolean) => {
-                if (mod.enabled && !enabledMods.includes(mod)) {
+                if (mod.enabled) {
                     profile.json.enabledMods.push(mod.name);
                     this._game.saveProfile(profile.name);
-                } else if (!mod.enabled && enabledMods.includes(mod)) {
+                } else {
                     profile.json.enabledMods = profile.json.enabledMods.filter(name => name !== mod.name);
                     this._game.saveProfile(profile.name);
                 }
