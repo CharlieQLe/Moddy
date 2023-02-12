@@ -15,6 +15,13 @@
     <file>style-dark.css</file>
   </gresource>
   <gresource prefix="/io/github/charlieqle/Moddy/icons/scalable/actions">
-    <file alias="view-more-symbolic.svg">icons/view-more-symbolic.svg</file>
+    <file alias="download-symbolic.svg">icons/download-symbolic.svg</file>
+    <file alias="go-next-symbolic.svg">icons/go-next-symbolic.svg</file>
+    <file alias="go-previous-symbolic.svg">icons/go-previous-symbolic.svg</file>
+    <file alias="install-from-archive-symbolic.svg">icons/install-from-archive-symbolic.svg</file>
+    <file alias="list-add-symbolic.svg">icons/list-add-symbolic.svg</file>
+    <file alias="mods-symbolic.svg">icons/mods-symbolic.svg</file>
+    <file alias="play-symbolic.svg">icons/play-symbolic.svg</file>
+    <file alias="stop-construction-symbolic.svg">icons/stop-construction-symbolic.svg</file>
   </gresource>
 </gresources>

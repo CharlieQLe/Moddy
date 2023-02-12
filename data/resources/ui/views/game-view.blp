@@ -23,7 +23,7 @@ template GameView : Gtk.Box {
         Adw.ViewStackPage {
             name: "mods";
             title: "Mods";
-            icon-name: "preferences-system-symbolic";
+            icon-name: "mods-symbolic";
             child: Gtk.ScrolledWindow {
                 child: Adw.Clamp {
                     Gtk.Box {
@@ -62,7 +62,7 @@ template GameView : Gtk.Box {
                                 clicked => onInstallModClicked();
                                 child: Adw.ButtonContent {
                                     label: "Install mod";
-                                    icon-name: "insert-object-symbolic";
+                                    icon-name: "install-from-archive-symbolic";
                                 };
 
                                 styles [
@@ -84,18 +84,18 @@ template GameView : Gtk.Box {
         Adw.ViewStackPage {
             name: "downloads";
             title: "Downloads";
-            icon-name: "folder-download-symbolic";
+            icon-name: "download-symbolic";
             child: Adw.StatusPage {
                 title: "This page is under construction!";
                 description: "Downloads will be available in a future version!";
-                icon-name: "preferences-system-privacy-symbolic";
+                icon-name: "stop-construction-symbolic";
             };
         }
 
         Adw.ViewStackPage {
             name: "play";
             title: "Play";
-            icon-name: "media-playback-start-symbolic";
+            icon-name: "play-symbolic";
             child: Gtk.ScrolledWindow {
                 child: Adw.Clamp {
                     child: Gtk.Box {
