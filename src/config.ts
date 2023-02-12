@@ -185,7 +185,7 @@ export class Game {
         const lower: string[] = [path, ...selectedProfile.json.modOrder.filter(modname => selectedProfile.json.enabledMods.includes(modname))
             .map(modname => GLib.build_filenamev([this.dataPath, 'mods', modname]))
             .reverse()];
-        const [ok, _, stderr, exit] = Utility.spawn('pkexec', 'mount', '-t', 'overlay', 'overlay', `"-olowerdir=${lower.join(':')},upperdir=${upperdir},workdir=${workdir}"`, `"${path}"`);
+        const [ok, _, stderr, exit] = Utility.spawnHost('pkexec', 'mount', '-t', 'overlay', 'overlay', `"-olowerdir=${lower.join(':')},upperdir=${upperdir},workdir=${workdir}"`, `"${path}"`);
         const decoder = new TextDecoder();
         if (stderr) {
             log(decoder.decode(stderr));
@@ -198,7 +198,7 @@ export class Game {
             return false;
         }
         const path = this.modTargetPath;
-        const [ok, _, __, exit] = Utility.spawn('pkexec', 'umount', path);
+        const [ok, _, __, exit] = Utility.spawnHost('pkexec', 'umount', path);
         return ok && exit === 0 && !this.isDeployed;
     }
 
