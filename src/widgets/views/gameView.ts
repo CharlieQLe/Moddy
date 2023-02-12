@@ -100,10 +100,12 @@ export class GameView extends Gtk.Box {
                         index = list.get_n_items() - 1;
                     }
                     this._profileSelector.set_selected(index);
+                    this._profileDeleteAction.set_enabled(list.get_n_items() > 1);
                 }
             });
             dialog.show();
         });
+        this._profileDeleteAction.set_enabled((this._profileSelector.model as Gtk.StringList).get_n_items() > 1);
         profileActions.insert(this._profileDeleteAction);
 
         // Select profile
@@ -144,9 +146,7 @@ export class GameView extends Gtk.Box {
     }
 
     public get selectedProfile() {
-        const list = this._profileSelector.model as Gtk.StringList;
-        this._profileDeleteAction.set_enabled(list.get_n_items() > 1);
-        const profileName = list.get_string(this._profileSelector.get_selected());
+        const profileName = (this._profileSelector.model as Gtk.StringList).get_string(this._profileSelector.get_selected());
         return profileName ? this._game.profiles[profileName] : null;
     }
 
