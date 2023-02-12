@@ -106,7 +106,6 @@ export class GameView extends Gtk.Box {
             });
             dialog.show();
         });
-        this._profileDeleteAction.set_enabled((this._profileSelector.model as Gtk.StringList).get_n_items() > 1);
         profileActions.insert(this._profileDeleteAction);
 
         // Select profile
@@ -120,6 +119,7 @@ export class GameView extends Gtk.Box {
             }
             i++;
         }
+        this._profileDeleteAction.set_enabled((this._profileSelector.model as Gtk.StringList).get_n_items() > 1);
 
         // Handle mods
         this.refreshMods();
