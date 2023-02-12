@@ -42,10 +42,10 @@ template GameView : Gtk.Box {
                                 notify::selected => onProfileSelected();
 
                                 [suffix]
-                                Gtk.Button {
+                                Gtk.MenuButton {
                                     valign: center;
-                                    icon-name: "settings-symbolic";
-                                    clicked => onProfileSettingsClicked();
+                                    icon-name: "view-more-symbolic";
+                                    menu-model: profile_menu;
 
                                     styles [
                                         "flat"
@@ -149,4 +149,27 @@ Gtk.FileChooserNative installModChooser {
     accept-label: "Open";
     cancel-label: "Cancel";
     response => onInstallModResponse();
+}
+
+menu profile_menu {
+    section {
+        item {
+            label: "New profile";
+            action: "profile.create";
+        }
+    }
+
+    section {
+        item {
+            label: "Settings";
+            action: "profile.settings";
+        }
+    }
+
+    section {
+        item {
+            label: "Delete profile";
+            action: "profile.delete";
+        }
+    }
 }

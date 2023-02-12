@@ -7,6 +7,7 @@ import { HomeView } from 'resource:///io/github/charlieqle/Moddy/js/widgets/view
 import { DirectoryEntryRow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/directoryEntryRow.js';
 import { GameRow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/gameRow.js';
 import { ModRow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/modRow.js';
+import { ProfileCreateWindow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/profileCreateWindow.js';
 import { ProfilePreferencesWindow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/profilePreferencesWindow.js';
 import { Application } from 'resource:///io/github/charlieqle/Moddy/js/application.js';
 import * as Utility from 'resource:///io/github/charlieqle/Moddy/js/utility.js';
@@ -22,6 +23,7 @@ export function main(argv: string[]) {
         DirectoryEntryRow.$gtype,
         GameRow.$gtype,
         ModRow.$gtype,
+        ProfileCreateWindow.$gtype,
         ProfilePreferencesWindow.$gtype,
     ].forEach(gtype => {
         GObject.type_ensure(gtype);

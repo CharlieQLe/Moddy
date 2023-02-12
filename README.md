@@ -18,10 +18,8 @@ The main features of Moddy include the following:
 * Mod multiple games
 * Installing mods from archives
 * Toggling installed mods
-* Profiles* for separate mod lists
+* Profiles for separate mod lists
 * Deploying mods with OverlayFS
-
-<sub>*must be manually created, use the generated `Default.json` file for reference</sub>
 
 ## <strong>Installation</strong>
 
@@ -55,7 +53,6 @@ flatpak-builder --force-clean --install --user -y builddir io.github.charlieqle.
 
 ## <strong>Future</strong>
 
-* Allow creation of multiple profiles
 * Allow renaming mods
 * Allow reordering mods
 * Allow deleting configurations

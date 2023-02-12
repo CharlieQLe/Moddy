@@ -1,10 +1,12 @@
 import Adw from 'gi://Adw';
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
+import Gio from 'gi://Gio';
 
 import { ModRow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/modRow.js';
-import { Game } from 'resource:///io/github/charlieqle/Moddy/js/config.js';
+import { Game, Profile, getDefaultProfileJson } from 'resource:///io/github/charlieqle/Moddy/js/config.js';
 import { GameRow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/gameRow.js';
+import { ProfileCreateWindow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/profileCreateWindow.js';
 import { ProfilePreferencesWindow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/profilePreferencesWindow.js';
 
 export class GameView extends Gtk.Box {
@@ -58,6 +60,48 @@ export class GameView extends Gtk.Box {
 
         // Handle deployment
         this._deploySwitch.set_state(this._game.isDeployed);
+
+        // Profile actions
+        const profileActions = Gio.SimpleActionGroup.new();
+        this.insert_action_group('profile', profileActions);
+        const profileCreateAction = Gio.SimpleAction.new('create', null);
+        profileCreateAction.connect('activate', (_: Gio.SimpleAction, __: null) => {
+            const window = new ProfileCreateWindow(this._game, this._window);
+            window.connect('create-profile', (_: ProfileCreateWindow, name: string) => {
+                const profile = new Profile(name, getDefaultProfileJson());
+                this._game.profiles[name] = profile;
+                this._game.refresh();
+                (this._profileSelector.model as Gtk.StringList).append(name);
+            });
+            window.show();
+        });
+        profileActions.insert(profileCreateAction);
+
+        const profileSettingsAction = Gio.SimpleAction.new('settings', null);
+        profileSettingsAction.connect('activate', (_: Gio.SimpleAction, __: null) => {
+            const profile = this.selectedProfile;
+            if (!profile) {
+                return; // TODO: print error
+            }
+            const window = new ProfilePreferencesWindow(profile, this._game, this._window);
+            window.connect('save-profile', (_: ProfilePreferencesWindow, name: string) => {
+                if (this._game.renameProfile(profile.name, name)) {
+                    const index = this._profileSelector.get_selected();
+                    const list = (this._profileSelector.model as Gtk.StringList);
+                    list.splice(index, 1, null);
+                    list.splice(index, 0, [name]);
+                    this._profileSelector.set_selected(index);
+                }
+            });
+            window.show();
+        });
+        profileActions.insert(profileSettingsAction);
+
+        const profileDeleteAction = Gio.SimpleAction.new('delete', null);
+        profileDeleteAction.connect('activate', (_: Gio.SimpleAction, __: null) => {
+            //
+        });
+        profileActions.insert(profileDeleteAction);
     }
 
     public get title() {
@@ -144,24 +188,6 @@ export class GameView extends Gtk.Box {
         this._game.json.selectedProfile = profile.name;
         this._game.save();
         this.refreshMods();
-    }
-
-    private onProfileSettingsClicked(_: Gtk.Button) {
-        const profile = this.selectedProfile;
-        if (!profile) {
-            return; // TODO: print error
-        }
-        const window = new ProfilePreferencesWindow(profile, this._game, this._window);
-        window.connect('save-profile', (_: ProfilePreferencesWindow, name: string) => {
-            if (this._game.renameProfile(profile.name, name)) {
-                const index = this._profileSelector.get_selected();
-                const list = (this._profileSelector.model as Gtk.StringList);
-                list.splice(index, 1, null);
-                list.splice(index, 0, [name]);
-                this._profileSelector.set_selected(index);
-            }
-        });
-        window.show();
     }
 
     private onInstallModClicked(_: Gtk.Button) {
