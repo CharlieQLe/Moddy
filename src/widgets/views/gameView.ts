@@ -56,6 +56,7 @@ export class GameView extends Gtk.Box {
                 this._game.profiles[name] = profile;
                 this._game.refresh();
                 (this._profileSelector.model as Gtk.StringList).append(name);
+                this._profileDeleteAction.set_enabled(true);
             });
             window.show();
         });
