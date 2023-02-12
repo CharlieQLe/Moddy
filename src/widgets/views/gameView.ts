@@ -5,6 +5,7 @@ import Gtk from 'gi://Gtk';
 import { ModRow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/modRow.js';
 import { Game } from 'resource:///io/github/charlieqle/Moddy/js/config.js';
 import { GameRow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/gameRow.js';
+import { ProfilePreferencesWindow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/profilePreferencesWindow.js';
 
 export class GameView extends Gtk.Box {
     private _profileSelector!: Adw.ComboRow;
@@ -77,6 +78,11 @@ export class GameView extends Gtk.Box {
         this.notify('hasMods');
     }
 
+    public get selectedProfile() {
+        const profileName = (this._profileSelector.model as Gtk.StringList).get_string(this._profileSelector.get_selected());
+        return profileName ? this._game.profiles[profileName] : null;
+    }
+
     public modMoveUp(row: ModRow) {
         // TODO
     }
@@ -107,9 +113,11 @@ export class GameView extends Gtk.Box {
         this._rows = [];
 
         // Add mods
-        const profileName = (this._profileSelector.model as Gtk.StringList).get_string(this._profileSelector.get_selected()) || 'Default';
-        const profile = this._game.profiles[profileName];
-        const enabledMods = this._game.getEnabledModsForProfile(profileName);
+        const profile = this.selectedProfile;
+        if (!profile) {
+            return; // TODO: print error
+        }
+        const enabledMods = this._game.getEnabledModsForProfile(profile.name);
         this.hasMods = this._game.mods.length > 0;
         this._game.mods.forEach(mod => {
             const row = new ModRow(mod, this);
@@ -129,7 +137,31 @@ export class GameView extends Gtk.Box {
     }
 
     private onProfileSelected(_: Adw.ComboRow, __: any) {
+        const profile = this.selectedProfile;
+        if (!profile) {
+            return; // TODO: print error
+        }
+        this._game.json.selectedProfile = profile.name;
+        this._game.save();
         this.refreshMods();
+    }
+
+    private onProfileSettingsClicked(_: Gtk.Button) {
+        const profile = this.selectedProfile;
+        if (!profile) {
+            return; // TODO: print error
+        }
+        const window = new ProfilePreferencesWindow(profile, this._game, this._window);
+        window.connect('save-profile', (_: ProfilePreferencesWindow, name: string) => {
+            if (this._game.renameProfile(profile.name, name)) {
+                const index = this._profileSelector.get_selected();
+                const list = (this._profileSelector.model as Gtk.StringList);
+                list.splice(index, 1, null);
+                list.splice(index, 0, [name]);
+                this._profileSelector.set_selected(index);
+            }
+        });
+        window.show();
     }
 
     private onInstallModClicked(_: Gtk.Button) {

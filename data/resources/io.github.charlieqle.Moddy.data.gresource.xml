@@ -8,8 +8,12 @@
     <file preprocess="xml-stripblanks">ui/directory-entry-row.ui</file>
     <file preprocess="xml-stripblanks">ui/game-row.ui</file>
     <file preprocess="xml-stripblanks">ui/mod-row.ui</file>
+    <file preprocess="xml-stripblanks">ui/profile-preferences-window.ui</file>
     <file preprocess="xml-stripblanks">ui/window.ui</file>
     <file>style.css</file>
     <file>style-dark.css</file>
+  </gresource>
+  <gresource prefix="/io/github/charlieqle/Moddy/icons/scalable/actions">
+    <file alias="settings-symbolic.svg">icons/settings-symbolic.svg</file>
   </gresource>
 </gresources>

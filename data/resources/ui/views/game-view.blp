@@ -40,6 +40,17 @@ template GameView : Gtk.Box {
                                 title: "Profiles";
                                 model: Gtk.StringList { };
                                 notify::selected => onProfileSelected();
+
+                                [suffix]
+                                Gtk.Button {
+                                    valign: center;
+                                    icon-name: "settings-symbolic";
+                                    clicked => onProfileSettingsClicked();
+
+                                    styles [
+                                        "flat"
+                                    ]
+                                }
                             }
                         }
 

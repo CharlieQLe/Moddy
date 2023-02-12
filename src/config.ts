@@ -175,20 +175,37 @@ export class Game {
     }
 
     public deploy() {
-        if (this.isDeployed) {
+        if (this.isDeployed || !(this.json.selectedProfile in this.profiles)) {
             return false;
         }
+
+        // Get the selected profile
+        const selectedProfile = this.profiles[this.json.selectedProfile];
+
+        // Build paths
         const path = this.modTargetPath;
         const upperdir = GLib.build_filenamev([this.dataPath, 'overwrite']);
         const workdir = GLib.build_filenamev([this.dataPath, 'work']);
-        const selectedProfile = this.profiles[this.json.selectedProfile || 'Default'];
+
+        // Build lower directory order
         const lower: string[] = [path, ...selectedProfile.json.modOrder.filter(modname => selectedProfile.json.enabledMods.includes(modname))
             .map(modname => GLib.build_filenamev([this.dataPath, 'mods', modname]))
             .reverse()];
-        const [ok, _, stderr, exit] = Utility.spawnHost('pkexec', 'mount', '-t', 'overlay', 'overlay', `"-olowerdir=${lower.join(':')},upperdir=${upperdir},workdir=${workdir}"`, `"${path}"`);
+
+        // Try to mount on the host
+        const [ok, stdout, stderr, exit] = Utility.spawnHost('pkexec', 'mount', '-t', 'overlay', 'overlay', `"-olowerdir=${lower.join(':')},upperdir=${upperdir},workdir=${workdir}"`, `"${path}"`);
         const decoder = new TextDecoder();
+        if (stdout) {
+            const str = decoder.decode(stdout);
+            if (str.length > 0) {
+                log(str);
+            }
+        }
         if (stderr) {
-            log(decoder.decode(stderr));
+            const str = decoder.decode(stderr);
+            if (str.length > 0) {
+                log(str);
+            }
         }
         return ok && exit === 0 && this.isDeployed;
     }
@@ -230,6 +247,16 @@ export class Game {
                     }
                 }
             }
+        }
+
+        // Ensure that there is always a profile
+        if (Object.keys(this.profiles).length === 0) {
+            this.profiles.Default = new Profile('Default', getDefaultProfileJson());
+        }
+
+        // Ensure that selectedProfile is always valid
+        if (!(this.json.selectedProfile in this.profiles)) {
+            this.json.selectedProfile = Object.keys(this.profiles)[0];
         }
 
         // Load mods
@@ -314,6 +341,36 @@ export class Game {
             const stream = profileFile.create(Gio.FileCreateFlags.NONE, null);
             stream.write_all(contents, null);
         }
+    }
+
+    public renameProfile(name: string, newName: string) {
+        if (!(name in this.profiles) || newName in this.profiles) {
+            return false;
+        }
+        const oldProfilePath = GLib.build_filenamev([this.dataPath, 'profiles', `${name}.json`]);
+        const profileFile = Gio.File.new_for_path(oldProfilePath);
+        if (!profileFile.query_exists(null)) {
+            return false;
+        }
+        profileFile.set_display_name(`${newName}.json`, null);
+
+        const profiles: {
+            [name: string]: Profile,
+        } = {};
+        for (const [profileName, profile] of Object.entries(this.profiles)) {
+            if (profileName !== name) {
+                profiles[profileName] = profile;
+            }
+        }
+        profiles[newName] = new Profile(newName, this.profiles[name].json);
+        this._profiles = profiles;
+
+        if (this.json.selectedProfile === name) {
+            this.json.selectedProfile = newName;
+        }
+
+        this.save();
+        return true;
     }
 
     public save() {
