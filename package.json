@@ -5,6 +5,7 @@
   "author": "Charlie Le <20309750+CharlieQLe@users.noreply.github.com>",
   "license": "GPL-3.0-only",
   "dependencies": {
+    "@node-steam/vdf": "^2.2.0",
     "typescript": "^4.9.4"
   },
   "scripts": {
@@ -16,6 +17,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",
+    "browserify": "^17.0.0",
     "eslint": "^8.33.0"
   }
 }

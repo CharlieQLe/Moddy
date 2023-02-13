@@ -5,27 +5,35 @@ import Gio from 'gi://Gio';
 
 import { DirectoryEntryRow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/directoryEntryRow.js';
 import { Game, GameJson, Profile, getDefaultProfileJson } from 'resource:///io/github/charlieqle/Moddy/js/config.js';
+import { GamePreset, loadPresets } from 'resource:///io/github/charlieqle/Moddy/js/gamePreset.js';
+import * as Steam from 'resource:///io/github/charlieqle/Moddy/js/steam.js'; 
+
+const DISALLOW_CHARS = [':'];
 
 export class AddGameView extends Gtk.Box {
     private _presetSelector!: Adw.ComboRow;
     private _titleEntry!: Adw.EntryRow;
     private _installDirEntry!: DirectoryEntryRow;
     private _nexusGroup!: Adw.PreferencesGroup;
+    private _nexusSwitch!: Gtk.Switch;
     private _nexusIdEntry!: Adw.EntryRow;
     private _steamGroup!: Adw.PreferencesGroup;
+    private _steamSwitch!: Gtk.Switch;
     private _steamAppIdEntry!: Adw.EntryRow;
     private _steamCompatdataDirEntry!: DirectoryEntryRow;
 
     private _games: Game[];
     private _validatedTitle: boolean;
     private _validatedInstallDir: boolean;
+    private _presets: GamePreset[];
 
     static {
         GObject.registerClass({
             GTypeName: 'AddGameView',
             Template: 'resource:///io/github/charlieqle/Moddy/ui/views/add-game-view.ui',
             InternalChildren: ['presetSelector', 'titleEntry', 'installDirEntry', 'nexusGroup',
-                'nexusIdEntry', 'steamGroup', 'steamAppIdEntry', 'steamCompatdataDirEntry'],
+                'nexusSwitch', 'nexusIdEntry', 'steamGroup', 'steamSwitch', 'steamAppIdEntry',
+                'steamCompatdataDirEntry'],
             Signals: {
                 'validated': {
                     param_types: [GObject.TYPE_BOOLEAN, GObject.TYPE_BOOLEAN],
@@ -40,6 +48,23 @@ export class AddGameView extends Gtk.Box {
         this._games = [];
         this._validatedTitle = false;
         this._validatedInstallDir = false;
+
+        const loadedPresets = loadPresets();
+        const steamPresets = Steam.parseGames(loadedPresets);
+        this._presets = [...steamPresets];
+        this._presets.sort((a, b) => a.name.localeCompare(b.name));
+        const list = this._presetSelector.model as Gtk.StringList;
+        this._presets.map(preset => preset.name).forEach(name => {
+            list.append(name);
+        });
+    }
+
+    public get selectedPreset() {
+        const index = this._presetSelector.get_selected();
+        if (index === 0) {
+            return null;
+        }
+        return this._presets[index - 1];
     }
 
     public createGame(): Game {
@@ -81,17 +106,35 @@ export class AddGameView extends Gtk.Box {
     }
 
     private onPresetSelected(_: Adw.ComboRow, __: any) {
-        const index = this._presetSelector.get_selected();
-
-        // TODO: Handle selected preset
-
+        let index = this._presetSelector.get_selected();
+        if (index === 0) {
+            return;
+        }
+        index--;
+        const preset = this._presets[index];
+        this._titleEntry.set_text(preset.name);
+        this._installDirEntry.set_text(preset.json.installDir || '');
+        if (preset.json.nexus) {
+            this._nexusSwitch.set_state(true);
+            this._nexusIdEntry.set_text(preset.json.nexus.id);
+        } else {
+            this._nexusSwitch.set_state(false);
+        }
+        if (preset.json.steam) {
+            this._steamSwitch.set_state(true);
+            this._steamAppIdEntry.set_text(preset.json.steam.appid);
+            this._steamCompatdataDirEntry.set_text(preset.json.steam.compatdataDir || '');
+        } else {
+            this._steamSwitch.set_state(false);
+        }
     }
 
     private onGameTitleChanged(row: Adw.EntryRow) {
         const title = row.get_text().trim();
+        const checkChars = !DISALLOW_CHARS.reduce((ret, char) => ret || title.includes(char), false);
         const checkLength = title.length > 0;
         const checkUnique = !this._games.map(game => game.name).includes(title);
-        this._validatedTitle = checkLength && checkUnique;
+        this._validatedTitle = checkChars && checkLength && checkUnique;
         this.emit('validated', this._validatedTitle, this._validatedInstallDir);
     }
 

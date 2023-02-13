@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/io/github/charlieqle/Moddy/js">
+    <file>vendor/acf-parser.js</file>
+    <file>vendor/vdf-parser.js</file>
     <file>widgets/views/addGameView.js</file>
     <file>widgets/views/gameView.js</file>
     <file>widgets/views/homeView.js</file>
@@ -13,8 +15,10 @@
     <file>widgets/window.js</file>
     <file>application.js</file>
     <file>config.js</file>
+    <file>gamePreset.js</file>
     <file>gsettings.js</file>
     <file>main.js</file>
+    <file>steam.js</file>
     <file>utility.js</file>
   </gresource>
 </gresources>

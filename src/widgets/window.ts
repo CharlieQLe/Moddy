@@ -82,6 +82,10 @@ export class Window extends Adw.ApplicationWindow {
 
     private addGameActivate(_: Gio.SimpleAction, __: null) {
         const game = this._addGameView.createGame();
+        const preset = this._addGameView.selectedPreset;
+        if (preset) {
+            game.json.relativeModPath = preset.json.relativeModPath || '';
+        }
         this.addGame(game);
         game.save();
         this._leaflet.set_visible_child_name(`game-${game.name}`);

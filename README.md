@@ -46,8 +46,9 @@ flatpak-builder --force-clean --install --user -y builddir io.github.charlieqle.
 
 ## <strong>Caveats</strong>
 
+* Flatpak users, add your Steam library locations to your Flatpak overrides
 * This has only been tested on the following distributions:
-    * Fedora Silverblue 37
+  * Fedora Silverblue 37
 * If the game directory is located within ```/run/``` on trying to add a game, then replace the text with the game's real directory! Otherwise, deploying mods will not work!
 * This application breaks the Flatpak sandbox! In order to deploy mods, ```flatpak-spawn --host``` needs to be called! This breaks the sandbox, so use at your own risk!
 
@@ -61,3 +62,8 @@ flatpak-builder --force-clean --install --user -y builddir io.github.charlieqle.
 * NexusMods download support
 * Bethesda game support (Skyrim, Fallout, etc.)
 * CLI arguments to deploy mods, launch a game, then purge mods once the game is closed
+
+## <strong>Libraries used</strong>
+
+* [@node-steam/vdf](https://github.com/node-steam/vdf), MIT-licensed
+* [steam-acf2json](https://github.com/zsnmwy/steam-acf2json), modified for ESM

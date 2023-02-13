@@ -1,0 +1,9 @@
+{
+    "relativeModPath": "Data",
+    "nexus": {
+        "id": "fallout4"
+    },
+    "steam": {
+        "appid": "611660"
+    }
+}

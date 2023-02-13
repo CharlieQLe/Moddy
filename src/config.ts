@@ -170,7 +170,20 @@ export class Game {
         if (!Gio.File.new_for_path(path).query_exists(null)) {
             return false;
         }
-        const [ok, _, __, exit] = Utility.spawn('mountpoint', path);
+        const [ok, stdout, stderr, exit] = Utility.spawn('mountpoint', `\"${path}\"`);
+        const decoder = new TextDecoder();
+        if (stdout) {
+            const str = decoder.decode(stdout);
+            if (str.length > 0) {
+                log(str);
+            }
+        }
+        if (stderr) {
+            const str = decoder.decode(stderr);
+            if (str.length > 0) {
+                log(str);
+            }
+        }
         return ok && exit === 0;
     }
 
@@ -193,7 +206,7 @@ export class Game {
             .reverse()];
 
         // Try to mount on the host
-        const [ok, stdout, stderr, exit] = Utility.spawnHost('pkexec', 'mount', '-t', 'overlay', 'overlay', `"-olowerdir=${lower.join(':')},upperdir=${upperdir},workdir=${workdir}"`, `"${path}"`);
+        const [ok, stdout, stderr, exit] = Utility.spawnHost('pkexec', 'mount', '-t', 'overlay', 'overlay', `\"-olowerdir=${lower.join(':')},upperdir=${upperdir},workdir=${workdir}\"`, `\"${path}\"`);
         const decoder = new TextDecoder();
         if (stdout) {
             const str = decoder.decode(stdout);
@@ -215,7 +228,7 @@ export class Game {
             return false;
         }
         const path = this.modTargetPath;
-        const [ok, _, __, exit] = Utility.spawnHost('pkexec', 'umount', path);
+        const [ok, _, __, exit] = Utility.spawnHost('pkexec', 'umount', `\"${path}\"`);
         return ok && exit === 0 && !this.isDeployed;
     }
 

@@ -1,0 +1,9 @@
+{
+    "relativeModPath": "Data",
+    "nexus": {
+        "id": "skyrimspecialedition"
+    },
+    "steam": {
+        "appid": "611670"
+    }
+}
