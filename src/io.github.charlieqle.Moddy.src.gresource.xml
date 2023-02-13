@@ -13,6 +13,7 @@
     <file>widgets/profileCreateWindow.js</file>
     <file>widgets/profilePreferencesWindow.js</file>
     <file>widgets/window.js</file>
+    <file>actionHandler.js</file>
     <file>application.js</file>
     <file>config.js</file>
     <file>gamePreset.js</file>

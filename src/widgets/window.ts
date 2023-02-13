@@ -7,6 +7,7 @@ import { AddGameView } from 'resource:///io/github/charlieqle/Moddy/js/widgets/v
 import { GameView } from 'resource:///io/github/charlieqle/Moddy/js/widgets/views/gameView.js';
 import { HomeView } from 'resource:///io/github/charlieqle/Moddy/js/widgets/views/homeView.js';
 import { Game } from 'resource:///io/github/charlieqle/Moddy/js/config.js';
+import { ActionHandler } from 'resource:///io/github/charlieqle/Moddy/js/actionHandler.js';
 
 import * as Utility from 'resource:///io/github/charlieqle/Moddy/js/utility.js';
 
@@ -16,7 +17,7 @@ export class Window extends Adw.ApplicationWindow {
     private _homeView!: HomeView;
     private _addGameView!: AddGameView;
 
-    private _addGameAction: Gio.SimpleAction;
+    private _actionHandler : ActionHandler;
     private _games: Game[];
 
     static {
@@ -31,15 +32,13 @@ export class Window extends Adw.ApplicationWindow {
         super({ application });
 
         // Add actions
-        const actionGroup = Gio.SimpleActionGroup.new();
-        this.insert_action_group('window', actionGroup);
-        const changeViewAction = Gio.SimpleAction.new('change-view', GLib.VariantType.new('s'));
-        changeViewAction.connect('activate', this.changeViewActivate.bind(this));
-        actionGroup.insert(changeViewAction);
-        this._addGameAction = Gio.SimpleAction.new('add-game', null);
-        this._addGameAction.set_enabled(false);
-        this._addGameAction.connect('activate', this.addGameActivate.bind(this));
-        actionGroup.insert(this._addGameAction);
+        this._actionHandler = new ActionHandler('window', this);
+        this._actionHandler.addAction('change-view', GLib.VariantType.new('s'), this.changeViewActivate.bind(this));
+        this._actionHandler.addAction('add-game', null, this.addGameActivate.bind(this));
+        const addGameAction = this._actionHandler.getAction('add-game');
+        if (addGameAction) {
+            addGameAction.set_enabled(false);
+        }
 
         // Load game files
         this._games = [];
@@ -80,7 +79,7 @@ export class Window extends Adw.ApplicationWindow {
         }
     }
 
-    private addGameActivate(_: Gio.SimpleAction, __: null) {
+    private addGameActivate(_: Gio.SimpleAction) {
         const game = this._addGameView.createGame();
         const preset = this._addGameView.selectedPreset;
         if (preset) {
@@ -94,6 +93,9 @@ export class Window extends Adw.ApplicationWindow {
     }
 
     private onAddGameValidated(_: AddGameView, validatedTitle: boolean, validatedInstallDir: boolean) {
-        this._addGameAction.set_enabled(validatedTitle && validatedInstallDir);
+        const addGameAction = this._actionHandler.getAction('add-game');
+        if (addGameAction) {
+            addGameAction.set_enabled(validatedTitle && validatedInstallDir);
+        }
     }
 }

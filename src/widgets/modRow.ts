@@ -4,6 +4,7 @@ import Gtk from 'gi://Gtk';
 import Gio from 'gi://Gio';
 import { Mod } from 'resource:///io/github/charlieqle/Moddy/js/config.js';
 import { GameView } from 'resource:///io/github/charlieqle/Moddy/js/widgets/views/gameView.js';
+import { ActionHandler } from 'resource:///io/github/charlieqle/Moddy/js/actionHandler.js';
 
 export class ModRow extends Adw.ActionRow {
     private _modToggle!: Gtk.Switch;
@@ -34,26 +35,10 @@ export class ModRow extends Adw.ActionRow {
         this._mod = mod;
         this._view = view;
 
-        const actionGroup = Gio.SimpleActionGroup.new();
-        this.insert_action_group('mod', actionGroup);
-
-        const moveUpAction = Gio.SimpleAction.new('move-up', null);
-        moveUpAction.connect('activate', (_: Gio.SimpleAction, __: null) => {
-            view.modMoveUp(this);
-        });
-        actionGroup.insert(moveUpAction);
-
-        const moveDownAction = Gio.SimpleAction.new('move-down', null);
-        moveDownAction.connect('activate', (_: Gio.SimpleAction, __: null) => {
-            view.modMoveDown(this);
-        });
-        actionGroup.insert(moveDownAction);
-
-        const uninstallAction = Gio.SimpleAction.new('uninstall', null);
-        uninstallAction.connect('activate', (_: Gio.SimpleAction, __: null) => {
-            view.modUninstall(this);
-        });
-        actionGroup.insert(uninstallAction);
+        const actionHandler = new ActionHandler('mod', this);
+        actionHandler.addAction('move-up', null, this.onMoveUpAction.bind(this));
+        actionHandler.addAction('move-down', null, this.onMoveDownAction.bind(this));
+        actionHandler.addAction('uninstall', null, this.onUninstallAction.bind(this));
     }
 
     public get mod() {
@@ -67,5 +52,17 @@ export class ModRow extends Adw.ActionRow {
     private onModStateSet(_: Gtk.Switch, state: boolean) {
         this._mod.enabled = state;
         this.emit('state-updated', this._mod.enabled);
+    }
+
+    private onMoveUpAction(_: Gio.SimpleAction) {
+        this._view.modMoveUp(this);
+    }
+
+    private onMoveDownAction(_: Gio.SimpleAction) {
+        this._view.modMoveDown(this);
+    }
+
+    private onUninstallAction(_: Gio.SimpleAction) {
+        this._view.modUninstall(this);
     }
 }

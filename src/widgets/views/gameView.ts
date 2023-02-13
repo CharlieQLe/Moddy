@@ -8,6 +8,7 @@ import { Game, Profile } from 'resource:///io/github/charlieqle/Moddy/js/config.
 import { GameRow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/gameRow.js';
 import { ProfileCreateWindow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/profileCreateWindow.js';
 import { ProfilePreferencesWindow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/profilePreferencesWindow.js';
+import { ActionHandler } from 'resource:///io/github/charlieqle/Moddy/js/actionHandler.js';
 
 export class GameView extends Gtk.Box {
     private _profileSelector!: Adw.ComboRow;
@@ -22,8 +23,7 @@ export class GameView extends Gtk.Box {
     private _game: Game;
     private _rows: GameRow[];
     private _toastOverlay: Adw.ToastOverlay;
-
-    private _profileDeleteAction: Gio.SimpleAction;
+    private _profileActionHandler: ActionHandler;
 
     static {
         GObject.registerClass({
@@ -46,67 +46,10 @@ export class GameView extends Gtk.Box {
         this.title = game.name;
 
         // Profile actions
-        const profileActions = Gio.SimpleActionGroup.new();
-        this.insert_action_group('profile', profileActions);
-        const profileCreateAction = Gio.SimpleAction.new('create', null);
-        profileCreateAction.connect('activate', (_: Gio.SimpleAction, __: null) => {
-            const window = new ProfileCreateWindow(this._game, this._window);
-            window.connect('create-profile', (_: ProfileCreateWindow, name: string) => {
-                const profile = new Profile(name);
-                this._game.profiles[name] = profile;
-                this._game.refresh();
-                (this._profileSelector.model as Gtk.StringList).append(name);
-                this._profileDeleteAction.set_enabled(true);
-            });
-            window.show();
-        });
-        profileActions.insert(profileCreateAction);
-
-        const profileSettingsAction = Gio.SimpleAction.new('settings', null);
-        profileSettingsAction.connect('activate', (_: Gio.SimpleAction, __: null) => {
-            const profile = this.selectedProfile;
-            if (!profile) {
-                return; // TODO: print error
-            }
-            const window = new ProfilePreferencesWindow(profile, this._game, this._window);
-            window.connect('save-profile', (_: ProfilePreferencesWindow, name: string) => {
-                if (this._game.renameProfile(profile.name, name)) {
-                    const index = this._profileSelector.get_selected();
-                    const list = (this._profileSelector.model as Gtk.StringList);
-                    list.splice(index, 1, null);
-                    list.splice(index, 0, [name]);
-                    this._profileSelector.set_selected(index);
-                }
-            });
-            window.show();
-        });
-        profileActions.insert(profileSettingsAction);
-
-        this._profileDeleteAction = Gio.SimpleAction.new('delete', null);
-        this._profileDeleteAction.connect('activate', (_: Gio.SimpleAction, __: null) => {
-            const profile = this.selectedProfile;
-            if (!profile) {
-                return; // TODO: print error
-            }
-            const dialog = Adw.MessageDialog.new(this._window, `Remove profile ${profile.name}?`, 'This action cannot be undone!');
-            dialog.add_response('cancel', 'Cancel');
-            dialog.add_response('remove', 'Remove');
-            dialog.set_response_appearance('remove', Adw.ResponseAppearance.DESTRUCTIVE);
-            dialog.connect('response', (_: Adw.MessageDialog, response: string) => {
-                if (response === 'remove' && this._game.removeProfile(profile.name)) {
-                    let index = this._profileSelector.get_selected();
-                    const list = (this._profileSelector.model as Gtk.StringList);
-                    list.splice(index, 1, null);
-                    if (index >= list.get_n_items()) {
-                        index = list.get_n_items() - 1;
-                    }
-                    this._profileSelector.set_selected(index);
-                    this._profileDeleteAction.set_enabled(list.get_n_items() > 1);
-                }
-            });
-            dialog.show();
-        });
-        profileActions.insert(this._profileDeleteAction);
+        this._profileActionHandler = new ActionHandler('profile', this);
+        this._profileActionHandler.addAction('create', null, this.onProfileCreateAction.bind(this));
+        this._profileActionHandler.addAction('settings', null, this.onProfileSettingsAction.bind(this));
+        this._profileActionHandler.addAction('delete', null, this.onProfileDeleteAction.bind(this));
 
         // Select profile
         const selectedProfile = game.profiles[game.json.selectedProfile];
@@ -119,7 +62,10 @@ export class GameView extends Gtk.Box {
             }
             i++;
         }
-        this._profileDeleteAction.set_enabled((this._profileSelector.model as Gtk.StringList).get_n_items() > 1);
+        const action = this._profileActionHandler.getAction('delete');
+        if (action) {
+            action.set_enabled(list.get_n_items() > 1);
+        }
 
         // Handle mods
         this.refreshMods();
@@ -242,5 +188,65 @@ export class GameView extends Gtk.Box {
         } else if (this._game.isDeployed) {
             this._game.purge();
         }
+    }
+
+    private onProfileCreateAction(_: Gio.SimpleAction) {
+        const window = new ProfileCreateWindow(this._game, this._window);
+        window.connect('create-profile', (_: ProfileCreateWindow, name: string) => {
+            const profile = new Profile(name);
+            this._game.profiles[name] = profile;
+            this._game.refresh();
+            (this._profileSelector.model as Gtk.StringList).append(name);
+            const action = this._profileActionHandler.getAction('delete');
+            if (action) {
+                action.set_enabled(true);
+            }
+        });
+        window.show();
+    }
+
+    private onProfileSettingsAction(_: Gio.SimpleAction) {
+        const profile = this.selectedProfile;
+        if (!profile) {
+            return; // TODO: print error
+        }
+        const window = new ProfilePreferencesWindow(profile, this._game, this._window);
+        window.connect('save-profile', (_: ProfilePreferencesWindow, name: string) => {
+            if (this._game.renameProfile(profile.name, name)) {
+                const index = this._profileSelector.get_selected();
+                const list = (this._profileSelector.model as Gtk.StringList);
+                list.splice(index, 1, null);
+                list.splice(index, 0, [name]);
+                this._profileSelector.set_selected(index);
+            }
+        });
+        window.show();
+    }
+
+    private onProfileDeleteAction(_: Gio.SimpleAction) {
+        const profile = this.selectedProfile;
+        if (!profile) {
+            return; // TODO: print error
+        }
+        const dialog = Adw.MessageDialog.new(this._window, `Remove profile ${profile.name}?`, 'This action cannot be undone!');
+        dialog.add_response('cancel', 'Cancel');
+        dialog.add_response('remove', 'Remove');
+        dialog.set_response_appearance('remove', Adw.ResponseAppearance.DESTRUCTIVE);
+        dialog.connect('response', (_: Adw.MessageDialog, response: string) => {
+            if (response === 'remove' && this._game.removeProfile(profile.name)) {
+                let index = this._profileSelector.get_selected();
+                const list = (this._profileSelector.model as Gtk.StringList);
+                list.splice(index, 1, null);
+                if (index >= list.get_n_items()) {
+                    index = list.get_n_items() - 1;
+                }
+                this._profileSelector.set_selected(index);
+                const action = this._profileActionHandler.getAction('delete');
+                if (action) {
+                    action.set_enabled(list.get_n_items() > 1);
+                }
+            }
+        });
+        dialog.show();
     }
 }
