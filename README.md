@@ -58,7 +58,6 @@ flatpak-builder --force-clean --install --user -y builddir io.github.charlieqle.
 * Allow reordering mods
 * Allow deleting configurations
 * Launch games directly
-* Auto-detect games installed via Steam
 * NexusMods download support
 * Bethesda game support (Skyrim, Fallout, etc.)
 * CLI arguments to deploy mods, launch a game, then purge mods once the game is closed
