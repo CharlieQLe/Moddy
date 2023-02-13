@@ -7,11 +7,13 @@
     <file>widgets/directoryEntryRow.js</file>
     <file>widgets/gameRow.js</file>
     <file>widgets/modRow.js</file>
+    <file>widgets/preferencesWindow.js</file>
     <file>widgets/profileCreateWindow.js</file>
     <file>widgets/profilePreferencesWindow.js</file>
     <file>widgets/window.js</file>
     <file>application.js</file>
     <file>config.js</file>
+    <file>gsettings.js</file>
     <file>main.js</file>
     <file>utility.js</file>
   </gresource>

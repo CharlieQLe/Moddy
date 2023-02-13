@@ -3,6 +3,7 @@ import Gio from 'gi://Gio';
 import Gtk from 'gi://Gtk?version=4.0';
 import Adw from 'gi://Adw?version=1';
 
+import { PreferencesWindow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/preferencesWindow.js';
 import { Window } from "resource:///io/github/charlieqle/Moddy/js/widgets/window.js";
 
 pkg.initGettext();
@@ -19,6 +20,13 @@ export class Application extends Adw.Application {
         super({ application_id: pkg.name, flags: Gio.ApplicationFlags.FLAGS_NONE });
 
         this._mainWindow = null;
+
+        const preferencesAction = new Gio.SimpleAction({ name: 'preferences' });
+        preferencesAction.connect('activate', _ => {
+            const window = new PreferencesWindow();
+            window.present();
+        });
+        this.add_action(preferencesAction);
 
         const quit_action = new Gio.SimpleAction({ name: 'quit' });
         quit_action.connect('activate', _ => this.quit());
