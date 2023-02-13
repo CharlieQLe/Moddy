@@ -5,14 +5,14 @@ import GnomeAutoar from 'gi://GnomeAutoar';
 
 import * as Utility from 'resource:///io/github/charlieqle/Moddy/js/utility.js';
 
-export function getDefaultProfileJson(): ProfileJson {
+function getDefaultProfileJson(): ProfileJson {
     return {
         modOrder: [],
         enabledMods: [],
     };
 }
 
-export function getDefaultGameJson(): GameJson {
+function getDefaultGameJson(): GameJson {
     return {
         installDir: '',
         relativeModPath: '',
@@ -82,9 +82,9 @@ export class Profile {
         return new Profile(name, getDefaultProfileJson());
     }
 
-    public constructor(name: string, json: ProfileJson) {
+    public constructor(name: string, json?: ProfileJson) {
         this._name = name;
-        this._json = json;
+        this._json = json || getDefaultProfileJson();
     }
 
     public get name() {
@@ -126,9 +126,9 @@ export class Game {
         return game;
     }
 
-    public constructor(name: string, json: GameJson) {
+    public constructor(name: string, json?: GameJson) {
         this._name = name;
-        this._json = json;
+        this._json = json || getDefaultGameJson();
         this._profiles = {};
         this._mods = [];
     }

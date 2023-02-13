@@ -4,7 +4,7 @@ import Gtk from 'gi://Gtk';
 import Gio from 'gi://Gio';
 
 import { ModRow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/modRow.js';
-import { Game, Profile, getDefaultProfileJson } from 'resource:///io/github/charlieqle/Moddy/js/config.js';
+import { Game, Profile } from 'resource:///io/github/charlieqle/Moddy/js/config.js';
 import { GameRow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/gameRow.js';
 import { ProfileCreateWindow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/profileCreateWindow.js';
 import { ProfilePreferencesWindow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/profilePreferencesWindow.js';
@@ -52,7 +52,7 @@ export class GameView extends Gtk.Box {
         profileCreateAction.connect('activate', (_: Gio.SimpleAction, __: null) => {
             const window = new ProfileCreateWindow(this._game, this._window);
             window.connect('create-profile', (_: ProfileCreateWindow, name: string) => {
-                const profile = new Profile(name, getDefaultProfileJson());
+                const profile = new Profile(name);
                 this._game.profiles[name] = profile;
                 this._game.refresh();
                 (this._profileSelector.model as Gtk.StringList).append(name);

@@ -4,9 +4,9 @@ import Gtk from 'gi://Gtk?version=4.0';
 import Gio from 'gi://Gio';
 
 import { DirectoryEntryRow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/directoryEntryRow.js';
-import { Game, GameJson, Profile, getDefaultProfileJson } from 'resource:///io/github/charlieqle/Moddy/js/config.js';
+import { Game, GameJson, Profile } from 'resource:///io/github/charlieqle/Moddy/js/config.js';
 import { GamePreset, loadPresets } from 'resource:///io/github/charlieqle/Moddy/js/gamePreset.js';
-import * as Steam from 'resource:///io/github/charlieqle/Moddy/js/steam.js'; 
+import * as Steam from 'resource:///io/github/charlieqle/Moddy/js/steam.js';
 
 const DISALLOW_CHARS = [':'];
 
@@ -85,7 +85,7 @@ export class AddGameView extends Gtk.Box {
             };
         }
         const game = new Game(this._titleEntry.get_text(), json);
-        game.profiles.Default = new Profile('Default', getDefaultProfileJson());
+        game.profiles.Default = new Profile('Default');
         return game;
     }
 
