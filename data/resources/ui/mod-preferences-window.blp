@@ -1,0 +1,59 @@
+using Gtk 4.0;
+using Adw 1;
+
+template ModPreferencesWindow : Adw.Window {
+    default-width: 400;
+    default-height: 400;
+
+    content: Gtk.Box {
+        orientation: vertical;
+
+        Adw.HeaderBar {
+            title-widget: Adw.WindowTitle {
+                title: bind ModPreferencesWindow.title;
+            };
+            decoration-layout: "";
+
+            [start]
+            Gtk.Button {
+                valign: center;
+                label: "Cancel";
+                clicked => onCancelClicked();
+            }
+
+            [end]
+            Gtk.Button {
+                valign: center;
+                label: "Save";
+                sensitive: bind ModPreferencesWindow.canSave;
+                clicked => onSaveClicked();
+
+                styles [
+                    "suggested-action"
+                ]
+            }
+        }
+
+        Gtk.ScrolledWindow {
+            hexpand: true;
+            vexpand: true;
+            child: Adw.Clamp {
+                child: Gtk.Box {
+                    orientation: vertical;
+                    spacing: 24;
+                    margin-top: 24;
+                    margin-bottom: 24;
+                    margin-start: 12;
+                    margin-end: 12;
+
+                    Adw.PreferencesGroup {
+                        Adw.EntryRow modNameEntry {
+                            title: "Mod name";
+                            changed => onModNameChanged();
+                        }
+                    }
+                };
+            };
+        }
+    };
+}

@@ -8,6 +8,7 @@
     <file>widgets/views/homeView.js</file>
     <file>widgets/directoryEntryRow.js</file>
     <file>widgets/gameRow.js</file>
+    <file>widgets/modPreferencesWindow.js</file>
     <file>widgets/modRow.js</file>
     <file>widgets/preferencesWindow.js</file>
     <file>widgets/profileCreateWindow.js</file>

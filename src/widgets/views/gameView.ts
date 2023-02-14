@@ -134,7 +134,7 @@ export class GameView extends Gtk.Box {
         }
         this.hasMods = this._game.mods.length > 0;
         this._game.mods.forEach(mod => {
-            const row = new ModRow(mod, this);
+            const row = new ModRow(mod, this._game, this._window, this);
             row.setModState(profile.json.enabledMods.includes(mod.name));
             row.connect('state-updated', (_: ModRow, __: boolean) => {
                 if (mod.enabled) {

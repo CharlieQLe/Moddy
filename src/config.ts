@@ -49,7 +49,7 @@ export class Mod extends GObject.Object {
         GObject.registerClass({
             GTypeName: 'Mod',
             Properties: {
-                'name': GObject.ParamSpec.string('name', 'Name', 'The mod name', GObject.ParamFlags.READABLE, ''),
+                'name': GObject.ParamSpec.string('name', 'Name', 'The mod name', GObject.ParamFlags.READWRITE, ''),
                 'enabled': GObject.ParamSpec.boolean('enabled', 'Enabled', 'The mod state', GObject.ParamFlags.READWRITE, false),
             },
         }, this);
@@ -62,6 +62,11 @@ export class Mod extends GObject.Object {
 
     public get name() {
         return this._name;
+    }
+
+    public set name(name: string) {
+        this._name = name;
+        this.notify('name');
     }
 
     public get enabled() {
@@ -411,6 +416,31 @@ export class Game {
 
         this.save();
         return true;
+    }
+
+    public renameMod(name: string, newName: string) {
+        for (const mod of this.mods) {
+            if (mod.name === name) {
+                const file = Gio.File.new_for_path(GLib.build_filenamev([this.dataPath, 'mods', name]));
+                file.set_display_name(newName, null);
+                mod.name = newName;
+                for (const profile of Object.values(this.profiles)) {
+                    const orderIndex = profile.json.modOrder.indexOf(name);
+                    if (orderIndex >= 0) {
+                        profile.json.modOrder.splice(orderIndex, 1);
+                        profile.json.modOrder.splice(orderIndex, 0, newName);
+                    }
+                    const enabledIndex = profile.json.modOrder.indexOf(name);
+                    if (enabledIndex >= 0) {
+                        profile.json.enabledMods.splice(enabledIndex, 1);
+                        profile.json.enabledMods.push(newName);
+                    }
+                }
+                this.save();
+                return true;
+            }
+        }
+        return false;
     }
 
     public save() {
