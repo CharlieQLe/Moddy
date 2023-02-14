@@ -54,7 +54,6 @@ flatpak-builder --force-clean --install --user -y builddir io.github.charlieqle.
 
 ## <strong>Future</strong>
 
-* Allow renaming mods
 * Allow reordering mods
 * Allow deleting configurations
 * Launch games directly
