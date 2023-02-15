@@ -115,7 +115,12 @@ export class Game extends GObject.Object {
             const [ok, contents] = configFile.load_contents(null);
             if (ok) {
                 this._data = JSON.parse(decoder.decode(contents)) as GameData;
+                log(`Loaded data for game "${name}"`);
+            } else {
+                log(`Could not load data for game "${name}"`);
             }
+        } else {
+            log(`Could not load data for game "${name}"`);
         }
 
         // Load mods
@@ -125,6 +130,7 @@ export class Game extends GObject.Object {
                 if (info.get_file_type() !== Gio.FileType.DIRECTORY) {
                     return;
                 }
+                log(`Found mod "${info.get_name()}" for game "${name}"`);
                 this.addMod(new Mod(info.get_name(), this));
             });
         }
@@ -141,12 +147,14 @@ export class Game extends GObject.Object {
                 if (!ok) {
                     return;
                 }
+                log(`Found profile "${info.get_name()}" for game "${name}"`);
                 this.addProfile(new Profile(fileName.substring(0, fileName.length - 5), this), JSON.parse(decoder.decode(contents)) as ProfileData);
             });
         }
         if (this.profiles.get_n_items() === 0) {
             this.addProfile(new Profile('Default', this));
         }
+        this.profiles.sort((a: Profile, b: Profile) => a.name.localeCompare(b.name));
         if (this.selectedProfileName === '') {
             this.selectedProfileName = (this.profiles.get_item(0) as Profile).name;
         }
@@ -305,6 +313,7 @@ export class Game extends GObject.Object {
         const extractor = GnomeAutoar.Extractor.new(file, output);
         extractor.set_output_is_dest(true);
         extractor.start(null);
+        log(`Installed mod "${modname}" for game ${this.name}`);
         this.addMod(new Mod(modname, this));
         return true;
     }
@@ -312,6 +321,7 @@ export class Game extends GObject.Object {
     public uninstallMod(mod: Mod) {
         const [ok, index] = this.mods.find(mod);
         if (!ok) {
+            log(`Could not remove "${mod.name}" for game ${this.name}`);
             return false;
         }
         this.mods.remove(index);
@@ -329,6 +339,7 @@ export class Game extends GObject.Object {
             }
         }
         this.saveData();
+        log(`Removed mod "${mod.name}" for game ${this.name}`);
         return true;
     }
 
@@ -345,6 +356,8 @@ export class Game extends GObject.Object {
         mod.connect('notify::enabled', this.onModEnabledChanged.bind(this));
 
         // TODO: Connect signals
+
+        log(`Added mod "${mod.name}" for game ${this.name}`);
     }
 
     public addProfile(profile: Profile, data?: ProfileData) {
@@ -372,20 +385,25 @@ export class Game extends GObject.Object {
         profile.connect('renamed', this.onProfileRenamed.bind(this));
 
         // TODO: Connect signals
+
+        log(`Added profile "${profile.name}" for game ${this.name}`);
     }
 
     public removeProfile(profile: Profile) {
         const [ok, index] = this.profiles.find(profile);
         if (!ok) {
+            log(`Could not remove profile "${profile.name}" for game ${this.name}`);
             return false;
         }
         this.profiles.remove(index);
+        Gio.File.new_for_path(GLib.build_filenamev([this.dataDir, 'profiles', `${profile.name}.json`])).trash(null);
         if (this.profiles.get_n_items() === 0) {
             this.addProfile(new Profile('Default', this));
         }
         if (profile.name === this.selectedProfileName) {
             this.selectedProfileName = (this.profiles.get_item(0) as Profile).name;
         }
+        log(`Removed profile "${profile.name}" for game ${this.name}`);
         return true;
     }
 
@@ -408,6 +426,7 @@ export class Game extends GObject.Object {
 
             profile.save();
         }
+        log(`Renamed mod "${oldName}" to "${name}" `);
     }
 
     private onModEnabledChanged(mod: Mod, _: GObject.ParamSpec<boolean>) {
@@ -434,6 +453,7 @@ export class Game extends GObject.Object {
             this.selectedProfileName = name;
         }
         profile.save();
+        log(`Renamed profile "${oldName}" to "${name}" `);
     }
 
     public get modTargetPath() {
