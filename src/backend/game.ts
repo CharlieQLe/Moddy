@@ -26,7 +26,7 @@ interface GameData {
     },
 }
 
-export function getDefaultGameData() {
+function getDefaultGameData() {
     return {
         dataDir: '',
         installDir: '',

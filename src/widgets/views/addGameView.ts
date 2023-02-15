@@ -4,8 +4,7 @@ import Gtk from 'gi://Gtk?version=4.0';
 import Gio from 'gi://Gio';
 
 import { DirectoryEntryRow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/directoryEntryRow.js';
-import { Game, getDefaultGameData } from 'resource:///io/github/charlieqle/Moddy/js/backend/game.js';
-import { Profile } from 'resource:///io/github/charlieqle/Moddy/js/backend/profile.js';
+import { Game } from 'resource:///io/github/charlieqle/Moddy/js/backend/game.js';
 import { GamePreset, loadPresets } from 'resource:///io/github/charlieqle/Moddy/js/gamePreset.js';
 import * as Steam from 'resource:///io/github/charlieqle/Moddy/js/steam.js';
 
