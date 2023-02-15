@@ -1,7 +1,9 @@
 import Adw from 'gi://Adw';
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
-import { Game, Profile } from 'resource:///io/github/charlieqle/Moddy/js/config.js';
+import { Game } from 'resource:///io/github/charlieqle/Moddy/js/backend/game.js';
+import { Profile } from 'resource:///io/github/charlieqle/Moddy/js/backend/profile.js';
+import * as Utility from 'resource:///io/github/charlieqle/Moddy/js/utility.js';
 
 export class ProfilePreferencesWindow extends Adw.Window {
     private _profileNameEntry!: Adw.EntryRow;
@@ -69,6 +71,7 @@ export class ProfilePreferencesWindow extends Adw.Window {
 
     private onProfileNameChanged(entry: Adw.EntryRow) {
         const newName = entry.get_text().trim();
-        this.canSave = newName.length > 0 && newName !== this._profile.name && !(newName in this._game.profiles);
+        const [hasDuplicate] = Utility.modelFind(this._game.profiles, profile => profile.name === newName);
+        this.canSave = newName.length > 0 && newName !== this._profile.name && !hasDuplicate;
     }
 }

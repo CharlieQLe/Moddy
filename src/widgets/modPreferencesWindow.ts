@@ -1,7 +1,9 @@
 import Adw from 'gi://Adw';
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
-import { Game, Mod } from 'resource:///io/github/charlieqle/Moddy/js/config.js';
+import { Game } from 'resource:///io/github/charlieqle/Moddy/js/backend/game.js';
+import { Mod } from 'resource:///io/github/charlieqle/Moddy/js/backend/mod.js';
+import * as Utility from 'resource:///io/github/charlieqle/Moddy/js/utility.js';
 
 export class ModPreferencesWindow extends Adw.Window {
     private _modNameEntry!: Adw.EntryRow;
@@ -58,12 +60,13 @@ export class ModPreferencesWindow extends Adw.Window {
     }
 
     private onSaveClicked(_: Gtk.Button) {
-        this._game.renameMod(this._mod.name, this._modNameEntry.get_text().trim());
+        this._mod.name = this._modNameEntry.get_text().trim();
         this.destroy();
     }
 
     private onModNameChanged(entry: Adw.EntryRow) {
         const newName = entry.get_text().trim();
-        this.canSave = newName.length > 0 && newName !== this._mod.name && !this._game.mods.map(mod => mod.name).includes(newName);
+        const [hasDuplicate] = Utility.modelFind(this._game.mods, mod => mod.name === newName);
+        this.canSave = newName.length > 0 && newName !== this._mod.name && !hasDuplicate;
     }
 }

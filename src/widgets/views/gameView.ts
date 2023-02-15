@@ -2,13 +2,14 @@ import Adw from 'gi://Adw';
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import Gio from 'gi://Gio';
-
 import { ModRow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/modRow.js';
-import { Game, Profile } from 'resource:///io/github/charlieqle/Moddy/js/config.js';
+import { Game } from 'resource:///io/github/charlieqle/Moddy/js/backend/game.js';
+import { Profile } from 'resource:///io/github/charlieqle/Moddy/js/backend/profile.js';
 import { GameRow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/gameRow.js';
 import { ProfileCreateWindow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/profileCreateWindow.js';
 import { ProfilePreferencesWindow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/profilePreferencesWindow.js';
 import { ActionHandler } from 'resource:///io/github/charlieqle/Moddy/js/actionHandler.js';
+import * as Utility from 'resource:///io/github/charlieqle/Moddy/js/utility.js';
 
 export class GameView extends Gtk.Box {
     private _profileSelector!: Adw.ComboRow;
@@ -52,11 +53,15 @@ export class GameView extends Gtk.Box {
         this._profileActionHandler.addAction('delete', null, this.onProfileDeleteAction.bind(this));
 
         // Select profile
-        const selectedProfile = game.profiles[game.json.selectedProfile];
+        const selectedProfile = game.selectedProfile;
+        if (!selectedProfile) {
+            throw new Error('Profile doesn\'t exist!');
+        }
+
         const list = this._profileSelector.model as Gtk.StringList;
         let i = 0;
-        for (const [name, profile] of Object.entries(game.profiles)) {
-            list.append(name);
+        for (const profile of game.profiles) {
+            list.append(profile.name);
             if (profile === selectedProfile) {
                 this._profileSelector.set_selected(i);
             }
@@ -94,7 +99,8 @@ export class GameView extends Gtk.Box {
 
     public get selectedProfile() {
         const profileName = (this._profileSelector.model as Gtk.StringList).get_string(this._profileSelector.get_selected());
-        return profileName ? this._game.profiles[profileName] : null;
+        const [,, profile] = Utility.modelFind(this._game.profiles, profile => profile.name === profileName);
+        return profile;
     }
 
     public modMoveUp(row: ModRow) {
@@ -114,7 +120,7 @@ export class GameView extends Gtk.Box {
             if (response === 'uninstall' && this._game.uninstallMod(row.mod)) {
                 this._rows.splice(this._rows.indexOf(row), 1);
                 this._modsGroup.remove(row);
-                this.hasMods = this._game.mods.length > 0;
+                this.hasMods = this._game.mods.get_n_items() > 0;
             }
         });
         dialog.show();
@@ -132,22 +138,13 @@ export class GameView extends Gtk.Box {
         if (!profile) {
             return; // TODO: print error
         }
-        this.hasMods = this._game.mods.length > 0;
-        this._game.mods.forEach(mod => {
+        this.hasMods = this._game.mods.get_n_items() > 0;
+        for (const mod of this._game.mods) {
             const row = new ModRow(mod, this._game, this._window, this);
-            row.setModState(profile.json.enabledMods.includes(mod.name));
-            row.connect('state-updated', (_: ModRow, __: boolean) => {
-                if (mod.enabled) {
-                    profile.json.enabledMods.push(mod.name);
-                    this._game.saveProfile(profile.name);
-                } else {
-                    profile.json.enabledMods = profile.json.enabledMods.filter(name => name !== mod.name);
-                    this._game.saveProfile(profile.name);
-                }
-            });
+            row.setModState(mod.enabled);
             this._modsGroup.add(row);
             this._rows.push(row);
-        });
+        }
     }
 
     private onProfileSelected(_: Adw.ComboRow, __: any) {
@@ -155,7 +152,7 @@ export class GameView extends Gtk.Box {
         if (!profile) {
             return; // TODO: print error
         }
-        this._game.json.selectedProfile = profile.name;
+        this._game.selectedProfileName = profile.name;
         this._game.save();
         this.refreshMods();
     }
@@ -168,7 +165,7 @@ export class GameView extends Gtk.Box {
         if (response === Gtk.ResponseType.ACCEPT) {
             const file = chooser.get_file();
             if (file) {
-                const ok = this._game.installModFromFile(file);
+                const ok = this._game.installMod(file);
                 if (ok) {
                     this.refreshMods();
                 }
@@ -193,9 +190,7 @@ export class GameView extends Gtk.Box {
     private onProfileCreateAction(_: Gio.SimpleAction) {
         const window = new ProfileCreateWindow(this._game, this._window);
         window.connect('create-profile', (_: ProfileCreateWindow, name: string) => {
-            const profile = new Profile(name);
-            this._game.profiles[name] = profile;
-            this._game.refresh();
+            this._game.addProfile(new Profile(name, this._game));
             (this._profileSelector.model as Gtk.StringList).append(name);
             const action = this._profileActionHandler.getAction('delete');
             if (action) {
@@ -212,13 +207,12 @@ export class GameView extends Gtk.Box {
         }
         const window = new ProfilePreferencesWindow(profile, this._game, this._window);
         window.connect('save-profile', (_: ProfilePreferencesWindow, name: string) => {
-            if (this._game.renameProfile(profile.name, name)) {
-                const index = this._profileSelector.get_selected();
-                const list = (this._profileSelector.model as Gtk.StringList);
-                list.splice(index, 1, null);
-                list.splice(index, 0, [name]);
-                this._profileSelector.set_selected(index);
-            }
+            profile.name = name;
+            const index = this._profileSelector.get_selected();
+            const list = (this._profileSelector.model as Gtk.StringList);
+            list.splice(index, 1, null);
+            list.splice(index, 0, [name]);
+            this._profileSelector.set_selected(index);
         });
         window.show();
     }
@@ -233,7 +227,7 @@ export class GameView extends Gtk.Box {
         dialog.add_response('remove', 'Remove');
         dialog.set_response_appearance('remove', Adw.ResponseAppearance.DESTRUCTIVE);
         dialog.connect('response', (_: Adw.MessageDialog, response: string) => {
-            if (response === 'remove' && this._game.removeProfile(profile.name)) {
+            if (response === 'remove' && this._game.removeProfile(profile)) {
                 let index = this._profileSelector.get_selected();
                 const list = (this._profileSelector.model as Gtk.StringList);
                 list.splice(index, 1, null);

@@ -1,7 +1,7 @@
 import Adw from 'gi://Adw';
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
-import { Game } from 'resource:///io/github/charlieqle/Moddy/js/config.js';
+import { Game } from 'resource:///io/github/charlieqle/Moddy/js/backend/game.js';
 
 export class ProfileCreateWindow extends Adw.Window {
     private _profileNameEntry!: Adw.EntryRow;

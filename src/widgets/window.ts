@@ -6,10 +6,8 @@ import GLib from 'gi://GLib';
 import { AddGameView } from 'resource:///io/github/charlieqle/Moddy/js/widgets/views/addGameView.js';
 import { GameView } from 'resource:///io/github/charlieqle/Moddy/js/widgets/views/gameView.js';
 import { HomeView } from 'resource:///io/github/charlieqle/Moddy/js/widgets/views/homeView.js';
-import { Game } from 'resource:///io/github/charlieqle/Moddy/js/config.js';
+import { Game, loadGames } from 'resource:///io/github/charlieqle/Moddy/js/backend/game.js';
 import { ActionHandler } from 'resource:///io/github/charlieqle/Moddy/js/actionHandler.js';
-
-import * as Utility from 'resource:///io/github/charlieqle/Moddy/js/utility.js';
 
 export class Window extends Adw.ApplicationWindow {
     private _toastOverlay!: Adw.ToastOverlay;
@@ -42,21 +40,9 @@ export class Window extends Adw.ApplicationWindow {
 
         // Load game files
         this._games = [];
-        const configFile = Gio.File.new_for_path(Utility.getConfigDir());
-        const enumerator = configFile.enumerate_children('standard::*', Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS, null);
-        while (true) {
-            const info = enumerator.next_file(null);
-            if (!info) {
-                break;
-            }
-            const filename = info.get_name();
-            if (info.get_file_type() === Gio.FileType.REGULAR && filename.endsWith('.json')) {
-                const game = Game.load(filename.substring(0, filename.length - 5));
-                if (game) {
-                    this.addGame(game);
-                }
-            }
-        }
+        loadGames().forEach(game => {
+            this.addGame(game);
+        });
 
         // Send games
         this._addGameView.setGames(this._games);
@@ -83,7 +69,7 @@ export class Window extends Adw.ApplicationWindow {
         const game = this._addGameView.createGame();
         const preset = this._addGameView.selectedPreset;
         if (preset) {
-            game.json.relativeModPath = preset.json.relativeModPath || '';
+            game.relativeModTarget = preset.json.relativeModPath || '';
         }
         this.addGame(game);
         game.save();

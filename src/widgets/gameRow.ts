@@ -1,7 +1,7 @@
 import Adw from 'gi://Adw';
 import GObject from 'gi://GObject';
 import GLib from 'gi://GLib';
-import { Game } from 'resource:///io/github/charlieqle/Moddy/js/config.js';
+import { Game } from 'resource:///io/github/charlieqle/Moddy/js/backend/game.js';
 
 export class GameRow extends Adw.ActionRow {
     static {

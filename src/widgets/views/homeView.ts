@@ -3,7 +3,7 @@ import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 
 import { GameRow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/gameRow.js';
-import { Game } from 'resource:///io/github/charlieqle/Moddy/js/config.js';
+import { Game } from 'resource:///io/github/charlieqle/Moddy/js/backend/game.js';
 
 export class HomeView extends Gtk.Box {
     private _gamesGroup!: Adw.PreferencesGroup;

@@ -4,7 +4,8 @@ import Gtk from 'gi://Gtk?version=4.0';
 import Gio from 'gi://Gio';
 
 import { DirectoryEntryRow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/directoryEntryRow.js';
-import { Game, GameJson, Profile } from 'resource:///io/github/charlieqle/Moddy/js/config.js';
+import { Game, getDefaultGameData } from 'resource:///io/github/charlieqle/Moddy/js/backend/game.js';
+import { Profile } from 'resource:///io/github/charlieqle/Moddy/js/backend/profile.js';
 import { GamePreset, loadPresets } from 'resource:///io/github/charlieqle/Moddy/js/gamePreset.js';
 import * as Steam from 'resource:///io/github/charlieqle/Moddy/js/steam.js';
 
@@ -68,24 +69,15 @@ export class AddGameView extends Gtk.Box {
     }
 
     public createGame(): Game {
-        const json: GameJson = {
-            installDir: this._installDirEntry.get_text(),
-            relativeModPath: "",
-            selectedProfile: "Default",
-        };
+        const game = new Game(this._titleEntry.get_text());
+        game.installDir = this._installDirEntry.get_text();
         if (this._nexusGroup.get_sensitive()) {
-            json.nexus = {
-                id: this._nexusIdEntry.get_text(),
-            };
+            game.nexusId = this._nexusIdEntry.get_text();
         }
         if (this._steamGroup.get_sensitive()) {
-            json.steam = {
-                appid: this._steamAppIdEntry.get_text(),
-                compatdataDir: this._steamCompatdataDirEntry.get_text(),
-            };
+            game.steamAppId = this._steamAppIdEntry.get_text();
+            game.steamCompatdataDir = this._steamCompatdataDirEntry.get_text();
         }
-        const game = new Game(this._titleEntry.get_text(), json);
-        game.profiles.Default = new Profile('Default');
         return game;
     }
 
@@ -141,7 +133,7 @@ export class AddGameView extends Gtk.Box {
     private onInstallDirChanged(row: DirectoryEntryRow) {
         const installDir = row.get_text();
         const checkExists = Gio.File.new_for_path(installDir).query_exists(null);
-        const checkUnique = !this._games.map(game => game.json.installDir).includes(installDir);
+        const checkUnique = !this._games.map(game => game.installDir).includes(installDir);
         this._validatedInstallDir = checkExists && checkUnique;
         this.emit('validated', this._validatedTitle, this._validatedInstallDir);
     }

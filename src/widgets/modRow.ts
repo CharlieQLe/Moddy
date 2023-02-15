@@ -2,7 +2,8 @@ import Adw from 'gi://Adw';
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import Gio from 'gi://Gio';
-import { Game, Mod } from 'resource:///io/github/charlieqle/Moddy/js/config.js';
+import { Game } from 'resource:///io/github/charlieqle/Moddy/js/backend/game.js';
+import { Mod } from 'resource:///io/github/charlieqle/Moddy/js/backend/mod.js';
 import { GameView } from 'resource:///io/github/charlieqle/Moddy/js/widgets/views/gameView.js';
 import { ModPreferencesWindow } from 'resource:///io/github/charlieqle/Moddy/js/widgets/modPreferencesWindow.js';
 import { ActionHandler } from 'resource:///io/github/charlieqle/Moddy/js/actionHandler.js';
@@ -53,7 +54,7 @@ export class ModRow extends Adw.ActionRow {
     }
 
     public get mod() {
-        return this._mod || new Mod('');
+        return this._mod;
     }
 
     public setModState(state: boolean) {
