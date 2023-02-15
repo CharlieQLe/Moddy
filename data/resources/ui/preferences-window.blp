@@ -6,7 +6,7 @@ template PreferencesWindow : Adw.PreferencesWindow {
         Adw.PreferencesGroup {
             title: "NexusMods settings";
             
-            Adw.EntryRow nexusEntry {
+            Adw.PasswordEntryRow nexusEntry {
                 title: "API Key";
                 changed => onNexusKeyChanged();
             }

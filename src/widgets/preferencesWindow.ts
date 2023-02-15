@@ -3,7 +3,7 @@ import GObject from 'gi://GObject';
 import { GSettings } from 'resource:///io/github/charlieqle/Moddy/js/gsettings.js';
 
 export class PreferencesWindow extends Adw.PreferencesWindow {
-    private _nexusEntry!: Adw.EntryRow;
+    private _nexusEntry!: Adw.PasswordEntryRow;
 
     private _gsettings: GSettings;
     private _restartToast?: Adw.Toast;
@@ -23,7 +23,7 @@ export class PreferencesWindow extends Adw.PreferencesWindow {
         this._restartToast?.dismiss();
     }
 
-    private onNexusKeyChanged(entry: Adw.EntryRow) {
+    private onNexusKeyChanged(entry: Adw.PasswordEntryRow) {
         this._gsettings.nexusKey = entry.get_text();
         if (!this._restartToast) {
             this._restartToast = Adw.Toast.new('Restart to use new API key!');
