@@ -58,7 +58,7 @@ export function parseGames(presets: GamePreset[]): GamePreset[] {
                     if (!ok) {
                         return;
                     }
-                    const acf = ACF.decode(decoder.decode(content)) as AppManifestACF;
+                    const acf = ACF.default.decode(decoder.decode(content)) as AppManifestACF;
                     if (!acf.AppState || !acf.AppState.appid || !acf.AppState.name || !acf.AppState.installdir) {
                         return;
                     }

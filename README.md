@@ -64,4 +64,5 @@ flatpak-builder --force-clean --install --user -y builddir io.github.charlieqle.
 ## <strong>Libraries used</strong>
 
 * [@node-steam/vdf](https://github.com/node-steam/vdf), MIT-licensed
-* [steam-acf2json](https://github.com/zsnmwy/steam-acf2json), modified for ESM
+* [steam-acf2json](https://github.com/zsnmwy/steam-acf2json), MIT-licensed
+* [fast-xml-parser](https://github.com/kawanet/from-xml), MIT-licensed
