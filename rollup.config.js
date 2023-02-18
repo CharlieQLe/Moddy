@@ -13,6 +13,13 @@ export default [
         },
         plugins: [nodeResolve(), commonjs(), ...],
     },
+    {
+        input: 'path/to/module/d.ts',
+        output: {
+            file: 'src/vendor/modulename.d.js,
+        },
+        plugins: [dts()],
+    },
     ...
 ]
 
