@@ -1,5 +1,6 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs'
+import dts from 'rollup-plugin-dts';
 
 /* Export like so:
 
@@ -24,6 +25,13 @@ export default [
             file: 'src/vendor/vdf-parser.js',
         },
         plugins: [nodeResolve(), commonjs()],
+    },
+    {
+        input: 'node_modules/@node-steam/vdf/lib/index.d.ts',
+        output: {
+            file: 'src/vendor/vdf-parser.d.ts',
+        },
+        plugins: [dts()],
     },
     {
         input: 'node_modules/steam-acf2json/main.js',
